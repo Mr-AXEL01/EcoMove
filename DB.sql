@@ -1,8 +1,8 @@
 --  create DB
-CREATE DATABASE IF NOT EXISTS EcoMove ;
+-- CREATE DATABASE ecomove ;
 
 -- use EcoMove
- USE EcoMove;
+ \c ecomove;
 
 
 -- create enums
@@ -18,49 +18,49 @@ CREATE DATABASE IF NOT EXISTS EcoMove ;
 
 CREATE TABLE IF NOT EXISTS Partner (
     id UUID PRIMARY KEY,
-    companyName VARCHAR(255) NOT NULL,
-    comercialContact VARCHAR(255),
-    transportType TransportType NOT NULL,
-    geographicalArea VARCHAR(255),
-    specialConditions TEXT,
-    partnerStatus PartnerStatus NOT NULL,
-    creationDate DATE NOT NULL
+    company_name VARCHAR(255) NOT NULL,
+    comercial_contact VARCHAR(255),
+    transport_type TransportType NOT NULL,
+    geographical_area VARCHAR(255),
+    special_conditions TEXT,
+    partner_status PartnerStatus NOT NULL,
+    creation_date DATE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Contract (
     id UUID PRIMARY KEY,
-    startDate DATE NOT NULL,
-    endDate DATE NOT NULL,
-    specialTariff REAL,
-    conditionsAccord TEXT,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    special_tariff REAL,
+    conditions_accord TEXT,
     renewable BOOLEAN NOT NULL,
-    contractStatus ContractStatus NOT NULL,
-    partnerId UUID,
-    FOREIGN KEY (partnerId) REFERENCES Partner(id)
+    contract_status ContractStatus NOT NULL,
+    partner_id UUID,
+    FOREIGN KEY (partner_id) REFERENCES Partner(id)
 );
 
 CREATE TABLE IF NOT EXISTS Promotion (
     id UUID PRIMARY KEY,
-    offerName VARCHAR(255) NOT NULL,
+    offer_name VARCHAR(255) NOT NULL,
     description TEXT,
-    startDate DATE NOT NULL,
-    endDate DATE NOT NULL,
-    reductionType ReductionType NOT NULL,
-    reductionValue REAL NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    reduction_type ReductionType NOT NULL,
+    reduction_value REAL NOT NULL,
     conditions TEXT,
-    offerStatus OfferStatus NOT NULL,
-    contractId UUID,
-    FOREIGN KEY (contractId) REFERENCES Contract(id)
+    offer_status OfferStatus NOT NULL,
+    contract_id UUID,
+    FOREIGN KEY (contract_id) REFERENCES Contract(id)
 );
 
 CREATE TABLE IF NOT EXISTS Ticket (
     id UUID PRIMARY KEY,
-    transportType TransportType NOT NULL,
-    purchasePrice REAL NOT NULL,
-    resellPrice REAL NOT NULL,
-    saleDate TIMESTAMP,
-    ticketStatus TicketStatus NOT NULL,
-    contractId UUID,
-    FOREIGN KEY (contractId) REFERENCES Contract(id)
+    transport_type TransportType NOT NULL,
+    purchase_price REAL NOT NULL,
+    resell_price REAL NOT NULL,
+    sale_date TIMESTAMP,
+    ticket_status TicketStatus NOT NULL,
+    contract_id UUID,
+    FOREIGN KEY (contract_id) REFERENCES Contract(id)
 );
 
