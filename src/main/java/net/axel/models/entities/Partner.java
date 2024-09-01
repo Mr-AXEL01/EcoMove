@@ -33,4 +33,60 @@ public class Partner {
     public void setId(UUID id) {
         this.id = id;
     }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getCommercialContact() {
+        return commercialContact;
+    }
+
+    public void setCommercialContact(String commercialContact) {
+        this.commercialContact = commercialContact;
+    }
+
+    public TransportType getTransportType() {
+        return transportType;
+    }
+
+    public void setTransportType(TransportType transportType) {
+        this.transportType = transportType;
+    }
+
+    public String getGeographicalArea() {
+        return geographicalArea;
+    }
+
+    public void setGeographicalArea(String geographicalArea) {
+        this.geographicalArea = geographicalArea;
+    }
+
+    public String getSpecialConditions() {
+        return specialConditions;
+    }
+
+    public void setSpecialConditions(String specialConditions) {
+        this.specialConditions = specialConditions;
+    }
+
+    public PartnerStatus getPartnerStatus() {
+        return partnerStatus;
+    }
+
+    public void setPartnerStatus(PartnerStatus partnerStatus) {
+        this.partnerStatus = partnerStatus;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 }
