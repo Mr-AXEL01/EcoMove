@@ -27,4 +27,76 @@ public class Promotion {
         this.conditions = conditions;
         this.offerStatus = offerStatus;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getOfferName() {
+        return offerName;
+    }
+
+    public void setOfferName(String offerName) {
+        this.offerName = offerName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public ReductionType getReductionType() {
+        return reductionType;
+    }
+
+    public void setReductionType(ReductionType reductionType) {
+        this.reductionType = reductionType;
+    }
+
+    public float getReductionValue() {
+        return reductionValue;
+    }
+
+    public void setReductionValue(float reductionValue) {
+        this.reductionValue = reductionValue;
+    }
+
+    public String getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(String conditions) {
+        this.conditions = conditions;
+    }
+
+    public OfferStatus getOfferStatus() {
+        return offerStatus;
+    }
+
+    public void setOfferStatus(OfferStatus offerStatus) {
+        this.offerStatus = offerStatus;
+    }
 }
