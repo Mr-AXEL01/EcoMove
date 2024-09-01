@@ -1,4 +1,5 @@
-package net.axel.models.entities;
+package net.axel.models.enums;
 
 public enum PartnerStatus {
+    ACTIVE, INACTIVE, SUSPENDED
 }
