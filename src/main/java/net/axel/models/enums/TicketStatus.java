@@ -1,4 +1,5 @@
 package net.axel.models.enums;
 
-public class TicketStatus {
+public enum TicketStatus {
+    SOLD, CANCELLED, PENDING
 }
