@@ -1,4 +1,5 @@
 package net.axel.models.enums;
 
-public class ContractStatus {
+public enum ContractStatus {
+    IN_PROGRESS, COMPLETE, SUSPENDED
 }
