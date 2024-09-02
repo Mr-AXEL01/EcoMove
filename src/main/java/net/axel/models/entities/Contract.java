@@ -13,8 +13,9 @@ public class Contract {
     private String conditionsAccord;
     private Boolean renewable;
     private ContractStatus contractStatus;
+    private Partner partner;
 
-    public Contract(UUID id, Date startDate, Date endDate, float specialTariff, String conditionsAccord, Boolean renewable, ContractStatus contractStatus) {
+    public Contract(UUID id, Date startDate, Date endDate, double specialTariff, String conditionsAccord, Boolean renewable, ContractStatus contractStatus, Partner partner) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -22,6 +23,7 @@ public class Contract {
         this.conditionsAccord = conditionsAccord;
         this.renewable = renewable;
         this.contractStatus = contractStatus;
+        this.partner = partner;
     }
 
     public UUID getId() {
@@ -48,11 +50,11 @@ public class Contract {
         this.endDate = endDate;
     }
 
-    public float getSpecialTariff() {
+    public double getSpecialTariff() {
         return specialTariff;
     }
 
-    public void setSpecialTariff(float specialTariff) {
+    public void setSpecialTariff(double specialTariff) {
         this.specialTariff = specialTariff;
     }
 
@@ -78,5 +80,13 @@ public class Contract {
 
     public void setContractStatus(ContractStatus contractStatus) {
         this.contractStatus = contractStatus;
+    }
+
+    public Partner getPartner() {
+        return partner;
+    }
+
+    public void setPartner(Partner partner) {
+        this.partner = partner;
     }
 }
