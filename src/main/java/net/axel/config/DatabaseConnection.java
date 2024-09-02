@@ -6,40 +6,43 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
 
+    private static DatabaseConnection instance = null;
     private static Connection connection = null;
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/ecomove";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "6631";
-
-    private DatabaseConnection() { }
-
-    public static Connection getConnection() {
-        if (connection == null) {
-            synchronized (DatabaseConnection.class) {
-                if (connection == null) {
-                    try {
-                        connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                        System.out.println("Connected to the PostgreSQL server successfully.");
-                    } catch (SQLException e) {
-                        System.out.println("Failed to connect to the PostgreSQL server: " + e.getMessage());
-                    }
-                }
-            }
-        }
-        return connection;
+    private DatabaseConnection() throws SQLException {
+        init();
     }
 
-    // Method to close the connection
+    public static DatabaseConnection getInstance() throws SQLException {
+        if (instance == null || !instance.connection.isClosed()) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+
     public static void closeConnection() {
-        if (connection != null) {
+        if (instance != null) {
             try {
-                connection.close();
-                connection = null; // Reset the connection
-                System.out.println("Connection closed.");
+                instance.getConnection().close();
+                instance = null;
             } catch (SQLException e) {
-                System.out.println("Failed to close the connection: " + e.getMessage());
+                throw new RuntimeException(e);
             }
         }
+    }
+
+    private void init() throws SQLException {
+        final String URL = "jdbc:postgresql://localhost:5432/ecomove";
+        final String USER = "postgres";
+        final String PASSWORD = "6631";
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        }
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 }
