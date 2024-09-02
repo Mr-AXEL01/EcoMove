@@ -22,17 +22,16 @@ public class PartnerRepository {
     }
 
     public void addPartner(Partner partner) throws SQLException {
-        String query = "INSERT INTO "+tableName+ " (id, company_name, commercial_contact, transport_type, geographical_area, special_conditions, partner_status, creation_date) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO "+tableName+ " (id, company_name, comercial_contact, transport_type, geographical_area, special_conditions, partner_status) " +
+                "VALUES (?, ?, ?, ?::TransportType, ?, ?, ?::PartnerStatus)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setObject(1, partner.getId());
             statement.setString(2, partner.getCompanyName());
-            statement.setString(3, partner.getCommercialContact());
+            statement.setString(3, partner.getComercialContact());
             statement.setString(4, partner.getTransportType().name());
             statement.setString(5, partner.getGeographicalArea());
             statement.setString(6, partner.getSpecialConditions());
             statement.setString(7, partner.getPartnerStatus().name());
-            statement.setDate(8, new java.sql.Date(partner.getCreationDate().getTime()));
             statement.executeUpdate();
         }
     }
@@ -64,10 +63,10 @@ public class PartnerRepository {
     }
 
     public void updatePartner(Partner partner) throws SQLException {
-        String query = "UPDATE "+tableName+" SET company_name = ?, commercial_contact = ?, transport_type = ?, geographical_area = ?, special_conditions = ?, partner_status = ? WHERE id = ?";
+        String query = "UPDATE "+tableName+" SET company_name = ?, comercial_contact = ?, transport_type = ?::TransportType, geographical_area = ?, special_conditions = ?, partner_status = ?::PartnerStatus WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, partner.getCompanyName());
-            statement.setString(2, partner.getCommercialContact());
+            statement.setString(2, partner.getComercialContact());
             statement.setString(3, partner.getTransportType().name());
             statement.setString(4, partner.getGeographicalArea());
             statement.setString(5, partner.getSpecialConditions());
@@ -88,13 +87,14 @@ public class PartnerRepository {
     private Partner mapResultSetToPartner(ResultSet resultSet) throws SQLException {
         UUID id = (UUID) resultSet.getObject("id");
         String companyName = resultSet.getString("company_name");
-        String commercialContact = resultSet.getString("commercial_contact");
+        String comercialContact = resultSet.getString("comercial_contact");
         TransportType transportType = TransportType.valueOf(resultSet.getString("transport_type"));
         String geographicalArea = resultSet.getString("geographical_area");
         String specialConditions = resultSet.getString("special_conditions");
         PartnerStatus partnerStatus = PartnerStatus.valueOf(resultSet.getString("partner_status"));
         Date creationDate = resultSet.getDate("creation_date");
 
-        return new Partner(id, companyName, commercialContact, transportType, geographicalArea, specialConditions, partnerStatus);
+        return new Partner(id, companyName, comercialContact, transportType, geographicalArea, specialConditions, partnerStatus, creationDate);
+
     }
 }
