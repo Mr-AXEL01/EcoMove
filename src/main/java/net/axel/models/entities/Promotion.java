@@ -1,5 +1,6 @@
 package net.axel.models.entities;
 
+import net.axel.models.enums.OfferStatus;
 import net.axel.models.enums.ReductionType;
 import org.w3c.dom.Text;
 
