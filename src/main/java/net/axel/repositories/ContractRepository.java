@@ -31,6 +31,7 @@ public class ContractRepository {
             stmt.setBoolean(6, contract.getRenewable());
             stmt.setString(7, contract.getContractStatus().name());
             stmt.setObject(8, contract.getPartner().getId());
+            stmt.executeUpdate();
         }
     }
     public Contract getContractById(UUID id) throws SQLException {
@@ -58,6 +59,21 @@ public class ContractRepository {
         }
         return contracts;
     }
+    public void updateContract(Contract contract) throws SQLException {
+        String query = "UPDATE " + tableName + " SET start_date = ?, end_date = ?, special_tariff = ?, conditions_accord = ?, renewable = ?, contract_status = ?::ContractStatus, partner_id = ? WHERE id = ?";
+        try(PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setDate(1, new Date(contract.getStartDate().getTime()));
+            stmt.setDate(2, new Date(contract.getEndDate().getTime()));
+            stmt.setDouble(3, contract.getSpecialTariff());
+            stmt.setString(4, contract.getConditionsAccord());
+            stmt.setBoolean(5, contract.getRenewable());
+            stmt.setString(6, contract.getContractStatus().name());
+            stmt.setObject(7, contract.getPartner().getId());
+            stmt.setObject(8, contract.getId());
+            stmt.executeUpdate();
+        }
+    }
+
 
     private Contract mapToContract(ResultSet resultSet) throws SQLException {
         UUID contractId = UUID.fromString(resultSet.getString("id"));
