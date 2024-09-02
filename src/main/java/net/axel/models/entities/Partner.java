@@ -9,21 +9,34 @@ import java.util.UUID;
 public class Partner {
     private UUID id;
     private String companyName;
-    private String commercialContact;
+    private String comercialContact;
     private TransportType transportType;
     private String geographicalArea;
     private String specialConditions;
     private PartnerStatus partnerStatus;
     private Date creationDate;
 
-    public Partner(UUID id, String companyName, String commercialContact, TransportType transportType, String geographicalArea, String specialConditions, PartnerStatus partnerStatus) {
+    public Partner(UUID id, String companyName, String comercialContact, TransportType transportType, String geographicalArea, String specialConditions, PartnerStatus partnerStatus) {
         this.id = id;
         this.companyName = companyName;
-        this.commercialContact = commercialContact;
+        this.comercialContact = comercialContact;
         this.transportType = transportType;
         this.geographicalArea = geographicalArea;
         this.specialConditions = specialConditions;
         this.partnerStatus = partnerStatus;
+
+    }
+
+    public Partner(UUID id, String companyName, String comercialContact, TransportType transportType, String geographicalArea, String specialConditions, PartnerStatus partnerStatus, Date creationDate) {
+        this.id = id;
+        this.companyName = companyName;
+        this.comercialContact = comercialContact;
+        this.transportType = transportType;
+        this.geographicalArea = geographicalArea;
+        this.specialConditions = specialConditions;
+        this.partnerStatus = partnerStatus;
+        this.creationDate = creationDate;
+
     }
 
     public UUID getId() {
@@ -42,12 +55,12 @@ public class Partner {
         this.companyName = companyName;
     }
 
-    public String getCommercialContact() {
-        return commercialContact;
+    public String getComercialContact() {
+        return comercialContact;
     }
 
-    public void setCommercialContact(String commercialContact) {
-        this.commercialContact = commercialContact;
+    public void setComercialContact(String comercialContact) {
+        this.comercialContact = comercialContact;
     }
 
     public TransportType getTransportType() {
