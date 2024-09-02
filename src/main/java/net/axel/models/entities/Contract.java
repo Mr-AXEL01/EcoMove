@@ -9,7 +9,7 @@ public class Contract {
     private UUID id;
     private Date startDate;
     private Date endDate;
-    private float specialTariff;
+    private double specialTariff;
     private String conditionsAccord;
     private Boolean renewable;
     private ContractStatus contractStatus;
