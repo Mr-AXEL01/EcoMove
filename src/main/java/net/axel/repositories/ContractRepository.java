@@ -73,7 +73,13 @@ public class ContractRepository {
             stmt.executeUpdate();
         }
     }
-
+    public void deleteContract(UUID id) throws SQLException {
+        String query = "DELETE FROM " + tableName + " WHERE id = ?";
+        try(PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setObject(1, id);
+            stmt.executeUpdate();
+        }
+    }
 
     private Contract mapToContract(ResultSet resultSet) throws SQLException {
         UUID contractId = UUID.fromString(resultSet.getString("id"));
