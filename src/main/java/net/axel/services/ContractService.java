@@ -28,7 +28,7 @@ public class ContractService {
             throw new RuntimeException("Error retrieving contract by id", e);
         }
     }
-    public List<Contract> getAllContract() {
+    public List<Contract> getAllContracts() {
         try {
             return contractRepository.getAllContracts();
         } catch (SQLException e) {
