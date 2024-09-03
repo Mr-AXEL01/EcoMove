@@ -93,14 +93,14 @@ public class ContractRepository {
 
         UUID partnerId = UUID.fromString(resultSet.getString("partner_id"));
         String companyName = resultSet.getString("company_name");
-        String commercialContact = resultSet.getString("commercial_contact");
+        String comercialContact = resultSet.getString("comercial_contact");
         String geographicalArea = resultSet.getString("geographical_area");
         String specialConditions = resultSet.getString("special_conditions");
         TransportType transportType = TransportType.valueOf(resultSet.getString("transport_type"));
         PartnerStatus partnerStatus = PartnerStatus.valueOf(resultSet.getString("partner_status"));
         Date creationDate = resultSet.getDate("creation_date");
 
-        Partner partner = new Partner(partnerId, companyName, commercialContact, transportType, geographicalArea, specialConditions, partnerStatus, creationDate);
+        Partner partner = new Partner(partnerId, companyName, comercialContact, transportType, geographicalArea, specialConditions, partnerStatus, creationDate);
 
         return new Contract(contractId, startDate, endDate, specialTariff, conditionsAccord, renewable, contractStatus, partner);
     }

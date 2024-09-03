@@ -38,6 +38,7 @@ public class ContractService {
         try {
             return contractRepository.getAllContracts();
         } catch (SQLException e) {
+//            e.printStackTrace();
             throw new RuntimeException("Error retrieving all contracts", e);
         }
     }
