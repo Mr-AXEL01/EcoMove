@@ -97,24 +97,28 @@ public class PartnerUi {
     }
 
     private void addNewPartner() {
-        System.out.print("\nEnter Company Name: ");
-        String companyName = scanner.nextLine();
-        System.out.print("Enter Commercial Contact: ");
-        String commercialContact = scanner.nextLine();
-        System.out.print("Enter Transport Type (AIR, TRAIN, BUS): ");
-        String transportTypeStr = scanner.nextLine();
-        TransportType transportType = TransportType.valueOf(transportTypeStr.toUpperCase());
-        System.out.print("Enter Geographical Area: ");
-        String geographicalArea = scanner.nextLine();
-        System.out.print("Enter Special Conditions: ");
-        String specialConditions = scanner.nextLine();
-        System.out.print("Enter Partner Status (ACTIVE, INACTIVE, SUSPENDED): ");
-        String partnerStatusStr = scanner.nextLine();
-        PartnerStatus partnerStatus = PartnerStatus.valueOf(partnerStatusStr.toUpperCase());
+        try {
+            System.out.print("\nEnter Company Name: ");
+            String companyName = scanner.nextLine();
+            System.out.print("Enter Commercial Contact: ");
+            String comercialContact = scanner.nextLine();
+            System.out.print("Enter Transport Type (PLANE, TRAIN, BUS, TAXI): ");
+            String transportTypeStr = scanner.nextLine();
+            TransportType transportType = TransportType.valueOf(transportTypeStr.toUpperCase());
+            System.out.print("Enter Geographical Area: ");
+            String geographicalArea = scanner.nextLine();
+            System.out.print("Enter Special Conditions: ");
+            String specialConditions = scanner.nextLine();
+            System.out.print("Enter Partner Status (ACTIVE, INACTIVE, SUSPENDED): ");
+            String partnerStatusStr = scanner.nextLine();
+            PartnerStatus partnerStatus = PartnerStatus.valueOf(partnerStatusStr.toUpperCase());
 
-        Partner newPartner = new Partner(UUID.randomUUID(), companyName, commercialContact, transportType, geographicalArea, specialConditions, partnerStatus);
-        partnerService.addPartner(newPartner);
-        System.out.println("Partner added successfully!");
+            Partner newPartner = new Partner(UUID.randomUUID(), companyName, comercialContact, transportType, geographicalArea, specialConditions, partnerStatus);
+            partnerService.addPartner(newPartner);
+            System.out.println("Partner added successfully!");
+        } catch (Exception e) {
+            System.out.println("Error adding contract: " + e.getMessage());
+        }
     }
 
     private void updatePartner() {
