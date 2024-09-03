@@ -195,6 +195,9 @@ public class ContractUi {
 
 
     private void deleteContract() {
-        // to do
+        System.out.println("\nEnter Contract ID :");
+        String id = scanner.nextLine();
+        contractService.deleteContract(UUID.fromString(id));
+        System.out.println("Contract Deleted Successfully");
     }
 }
