@@ -4,6 +4,8 @@ import net.axel.models.ContractDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Partner;
 import net.axel.models.enums.ContractStatus;
+import net.axel.models.enums.PartnerStatus;
+import net.axel.models.enums.TransportType;
 import net.axel.services.ContractService;
 
 import java.text.ParseException;
@@ -134,8 +136,63 @@ public class ContractUi {
     }
 
     private void updateContract() {
-        // to do
+        try {
+            System.out.print("\nEnter Contract ID to update: ");
+            UUID contractId = UUID.fromString(scanner.nextLine());
+            Contract existingContract = contractService.getContractById(contractId);
+            if (existingContract == null) {
+                System.out.println("Contract not found!");
+                return;
+            }
+
+            System.out.print("Enter The Start Date (yyyy-MM-dd) [" + dateFormat.format(existingContract.getStartDate()) + "]: ");
+            String startDateInput = scanner.nextLine();
+            Date startDate = startDateInput.isEmpty() ? existingContract.getStartDate() : dateFormat.parse(startDateInput);
+
+            System.out.print("Enter The End Date (yyyy-MM-dd) [" + dateFormat.format(existingContract.getEndDate()) + "]: ");
+            String endDateInput = scanner.nextLine();
+            Date endDate = endDateInput.isEmpty() ? existingContract.getEndDate() : dateFormat.parse(endDateInput);
+
+            System.out.print("Enter The Special Tariff ($.$$ or $%) [" + existingContract.getSpecialTariff() + "]: ");
+            String specialTariffInput = scanner.nextLine();
+            double specialTariff = specialTariffInput.isEmpty() ? existingContract.getSpecialTariff() : Double.parseDouble(specialTariffInput);
+
+            System.out.print("Enter The Conditions Accord [" + existingContract.getConditionsAccord() + "]: ");
+            String conditionsAccord = scanner.nextLine();
+            conditionsAccord = conditionsAccord.isEmpty() ? existingContract.getConditionsAccord() : conditionsAccord;
+
+            System.out.print("Is The Contract Renewable? (true or false) [" + existingContract.getRenewable() + "]: ");
+            String renewableInput = scanner.nextLine();
+            boolean renewable = renewableInput.isEmpty() ? existingContract.getRenewable() : Boolean.parseBoolean(renewableInput);
+
+            System.out.print("Enter Contract Status (IN_PROGRESS, COMPLETE, SUSPENDED) [" + existingContract.getContractStatus() + "]: ");
+            String contractStatusStr = scanner.nextLine();
+            ContractStatus contractStatus = contractStatusStr.isEmpty() ? existingContract.getContractStatus() : ContractStatus.valueOf(contractStatusStr.toUpperCase());
+
+            System.out.print("Enter Partner ID [" + existingContract.getPartner().getId() + "]: ");
+            String partnerIdInput = scanner.nextLine();
+            UUID partnerId = partnerIdInput.isEmpty() ? existingContract.getPartner().getId() : UUID.fromString(partnerIdInput);
+
+            final ContractDto updatedDto = new ContractDto(
+                    startDate,
+                    endDate,
+                    specialTariff,
+                    conditionsAccord,
+                    renewable,
+                    contractStatus,
+                    partnerId
+            );
+
+            contractService.updateContract(contractId, updatedDto);
+            System.out.println("Contract updated successfully!");
+
+        } catch (ParseException e) {
+            System.out.println("Error: Invalid date format. Please use 'yyyy-MM-dd'.");
+        } catch (Exception e) {
+            System.out.println("Error updating contract: " + e.getMessage());
+        }
     }
+
 
     private void deleteContract() {
         // to do
