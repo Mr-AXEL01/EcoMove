@@ -2,10 +2,7 @@ package net.axel.presentations;
 
 import net.axel.models.ContractDto;
 import net.axel.models.entities.Contract;
-import net.axel.models.entities.Partner;
 import net.axel.models.enums.ContractStatus;
-import net.axel.models.enums.PartnerStatus;
-import net.axel.models.enums.TransportType;
 import net.axel.services.ContractService;
 
 import java.text.ParseException;
@@ -72,8 +69,7 @@ public class ContractUi {
         if (contracts != null && !contracts.isEmpty()) {
             for (Contract contract : contracts) {
                 System.out.println("|-----------------------------------------------------------|");
-                System.out.println("| ID: " + contract.getId() + " | Partner: " + contract.getPartner().getCompanyName() + " |");
-                System.out.println("|-----------------------------------------------------------|");
+                System.out.println("| ID: " + contract.getId() + " | Partner: " + contract.getPartner().getCompanyName());
             }
         } else {
             System.out.println("No contracts found at the moment!");
