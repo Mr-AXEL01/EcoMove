@@ -1,6 +1,7 @@
 package net.axel.repositories;
 
 import net.axel.config.DatabaseConnection;
+import net.axel.models.ContractDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Partner;
 import net.axel.models.enums.ContractStatus;
