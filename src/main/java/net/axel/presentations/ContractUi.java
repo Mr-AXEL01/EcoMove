@@ -1,11 +1,14 @@
 package net.axel.presentations;
 
+import net.axel.models.ContractDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Partner;
+import net.axel.models.enums.ContractStatus;
 import net.axel.services.ContractService;
 
-import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -14,10 +17,12 @@ public class ContractUi {
 
     private final ContractService contractService;
     private final Scanner scanner;
+    private final SimpleDateFormat dateFormat;
 
-    public ContractUi() throws SQLException {
-        this.contractService = new ContractService();
+    public ContractUi(ContractService contractService) {
+        this.contractService = contractService;
         this.scanner = new Scanner(System.in);
+        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     public void displayMenu() {
@@ -62,33 +67,77 @@ public class ContractUi {
     private void listAllContracts() {
         List<Contract> contracts = contractService.getAllContracts();
         System.out.println("\n--- List of Contracts ---");
-        System.out.println("");
         if (contracts != null && !contracts.isEmpty()) {
             for (Contract contract : contracts) {
                 System.out.println("|-----------------------------------------------------------|");
-                System.out.println("| ID: " + contract.getId() + " | Partner: " + contract.getPartner().getCompanyName());
+                System.out.println("| ID: " + contract.getId() + " | Partner: " + contract.getPartner().getCompanyName() + " |");
+                System.out.println("|-----------------------------------------------------------|");
             }
         } else {
-            System.out.println("No contracts found for the moment!");
+            System.out.println("No contracts found at the moment!");
         }
     }
+
     private void viewContractDetails() {
         System.out.print("\nEnter Contract ID: ");
         String id = scanner.nextLine();
         Contract contract = contractService.getContractById(UUID.fromString(id));
         if (contract != null) {
-
             System.out.println("\n************* Contract Details *************");
             System.out.println("ID                : " + contract.getId());
-            System.out.println("Start Date        : " + contract.getStartDate());
-            System.out.println("End Date          : " + contract.getEndDate());
+            System.out.println("Start Date        : " + dateFormat.format(contract.getStartDate()));
+            System.out.println("End Date          : " + dateFormat.format(contract.getEndDate()));
             System.out.println("Special Tariff    : " + contract.getSpecialTariff());
-            System.out.println("Conditions Accord : " + contract.getConditionsAccord()+"\n");
+            System.out.println("Conditions Accord : " + contract.getConditionsAccord());
             System.out.println("Renewable         : " + contract.getRenewable());
             System.out.println("Contract Status   : " + contract.getContractStatus());
             System.out.println("Partner Name      : " + contract.getPartner().getCompanyName());
         } else {
-            System.out.println("Partner not found!");
+            System.out.println("Contract not found!");
         }
+    }
+
+    private void addNewContract() {
+        try {
+            System.out.print("\nEnter The Start Date (yyyy-MM-dd): ");
+            Date startDate = dateFormat.parse(scanner.nextLine());
+            System.out.print("Enter The End Date (yyyy-MM-dd): ");
+            Date endDate = dateFormat.parse(scanner.nextLine());
+            System.out.print("Enter The Special Tariff ($.$$ or $%): ");
+            double specialTariff = Double.parseDouble(scanner.nextLine());
+            System.out.print("Enter The Conditions Accord: ");
+            String conditionsAccord = scanner.nextLine();
+            System.out.print("Is The Contract Renewable? (true or false): ");
+            boolean renewable = Boolean.parseBoolean(scanner.nextLine());
+            System.out.print("Enter Contract Status (IN_PROGRESS, COMPLETE, SUSPENDED): ");
+            String contractStatusStr = scanner.nextLine();
+            ContractStatus contractStatus = ContractStatus.valueOf(contractStatusStr.toUpperCase());
+            System.out.print("Enter Partner ID: ");
+            UUID partnerId = UUID.fromString(scanner.nextLine());
+
+            final ContractDto dto = new ContractDto(
+                    startDate,
+                    endDate,
+                    specialTariff,
+                    conditionsAccord,
+                    renewable,
+                    contractStatus,
+                    partnerId
+            );
+            contractService.addContract(dto);
+            System.out.println("Contract added successfully!");
+        } catch (ParseException e) {
+            System.out.println("Error: Invalid date format. Please use 'yyyy-MM-dd'.");
+        } catch (Exception e) {
+            System.out.println("Error adding contract: " + e.getMessage());
+        }
+    }
+
+    private void updateContract() {
+        // to do
+    }
+
+    private void deleteContract() {
+        // to do
     }
 }
