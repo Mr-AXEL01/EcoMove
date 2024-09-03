@@ -41,8 +41,10 @@ public class ContractService {
             throw new RuntimeException("Error retrieving all contracts", e);
         }
     }
-    public void updateContract(Contract contract) {
+    public void updateContract(UUID contractId,ContractDto updateDto) {
         try {
+            final Partner partner = partnerService.getPartnerById(updateDto.partnerId());
+            final Contract contract = new Contract(contractId, updateDto.startDate(), updateDto.endDate(), updateDto.specialTariff(), updateDto.conditionAccord(), updateDto.renewable(), updateDto.status(), partner);
             contractRepository.updateContract(contract);
         } catch (SQLException e) {
             throw new RuntimeException("Eroor updating contract", e);
