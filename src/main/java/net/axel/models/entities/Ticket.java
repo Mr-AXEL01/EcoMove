@@ -9,18 +9,20 @@ import java.util.UUID;
 public class Ticket {
     private UUID id;
     private TransportType transportType;
-    private float purchasePrice;
-    private float resellPrice;
+    private Double purchasePrice;
+    private Double resellPrice;
     private Date saleDate;
     private TicketStatus ticketStatus;
+    private Contract contract;
 
-    public Ticket(UUID id, TransportType transportType, float purchasePrice, float resellPrice, Date saleDate, TicketStatus ticketStatus) {
+    public Ticket(UUID id, TransportType transportType, Double purchasePrice, Double resellPrice, Date saleDate, TicketStatus ticketStatus, Contract contract) {
         this.id = id;
         this.transportType = transportType;
         this.purchasePrice = purchasePrice;
         this.resellPrice = resellPrice;
         this.saleDate = saleDate;
         this.ticketStatus = ticketStatus;
+        this.contract = contract;
     }
 
     public UUID getId() {
@@ -39,19 +41,19 @@ public class Ticket {
         this.transportType = transportType;
     }
 
-    public float getPurchasePrice() {
+    public Double getPurchasePrice() {
         return purchasePrice;
     }
 
-    public void setPurchasePrice(float purchasePrice) {
+    public void setPurchasePrice(Double purchasePrice) {
         this.purchasePrice = purchasePrice;
     }
 
-    public float getResellPrice() {
+    public Double getResellPrice() {
         return resellPrice;
     }
 
-    public void setResellPrice(float resellPrice) {
+    public void setResellPrice(Double resellPrice) {
         this.resellPrice = resellPrice;
     }
 
@@ -69,5 +71,13 @@ public class Ticket {
 
     public void setTicketStatus(TicketStatus ticketStatus) {
         this.ticketStatus = ticketStatus;
+    }
+
+    public Contract getContract() {
+        return contract;
+    }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
     }
 }
