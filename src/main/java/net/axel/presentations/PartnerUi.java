@@ -13,8 +13,8 @@ import java.util.UUID;
 
 public class PartnerUi {
 
-    private PartnerService partnerService;
-    private Scanner scanner;
+    private final PartnerService partnerService;
+    private final Scanner scanner;
 
     public PartnerUi() throws SQLException {
         this.partnerService = new PartnerService();
