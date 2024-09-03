@@ -1,6 +1,8 @@
 package net.axel.services;
 
+import net.axel.models.ContractDto;
 import net.axel.models.entities.Contract;
+import net.axel.models.entities.Partner;
 import net.axel.repositories.ContractRepository;
 
 import java.sql.SQLException;
@@ -10,12 +12,16 @@ import java.util.UUID;
 public class ContractService {
 
     private final ContractRepository contractRepository;
+    private final PartnerService partnerService;
 
     public ContractService() throws SQLException {
         this.contractRepository = new ContractRepository();
+        this.partnerService = new PartnerService();
     }
-    public void addContract(Contract contract) {
+    public void addContract(ContractDto dto) {
         try {
+            final Partner partner = partnerService.getPartnerById(dto.partnerId());
+            final Contract contract = new Contract(UUID.randomUUID(), dto.startDate(), dto.endDate(), dto.specialTariff(), dto.conditionAccord(), dto.renewable(), dto.status(), partner);
             contractRepository.addContract(contract);
         } catch (SQLException e) {
             throw new RuntimeException("Error adding contract", e);
