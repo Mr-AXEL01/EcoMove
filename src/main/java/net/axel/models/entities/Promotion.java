@@ -17,8 +17,9 @@ public class Promotion {
     private float reductionValue;
     private String conditions;
     private OfferStatus offerStatus;
+    private Contract contract;
 
-    public Promotion(UUID id, String offerName, String description, Date startDate, Date endDate, ReductionType reductionType, float reductionValue, String conditions, OfferStatus offerStatus) {
+    public Promotion(UUID id, String offerName, String description, Date startDate, Date endDate, ReductionType reductionType, float reductionValue, String conditions, OfferStatus offerStatus, Contract contract) {
         this.id = id;
         this.offerName = offerName;
         this.description = description;
@@ -28,6 +29,7 @@ public class Promotion {
         this.reductionValue = reductionValue;
         this.conditions = conditions;
         this.offerStatus = offerStatus;
+        this.contract = contract;
     }
 
     public UUID getId() {
@@ -100,5 +102,13 @@ public class Promotion {
 
     public void setOfferStatus(OfferStatus offerStatus) {
         this.offerStatus = offerStatus;
+    }
+
+    public Contract getContract() {
+        return contract;
+    }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
     }
 }
