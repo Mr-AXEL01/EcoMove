@@ -1,6 +1,6 @@
 package net.axel.services;
 
-import net.axel.models.ContractDto;
+import net.axel.models.dto.ContractDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Partner;
 import net.axel.repositories.ContractRepository;
@@ -18,6 +18,7 @@ public class ContractService {
         this.contractRepository = new ContractRepository();
         this.partnerService = new PartnerService();
     }
+
     public void addContract(ContractDto dto) {
         try {
             final Partner partner = partnerService.getPartnerById(dto.partnerId());
@@ -27,6 +28,7 @@ public class ContractService {
             throw new RuntimeException("Error adding contract", e);
         }
     }
+
     public Contract getContractById(UUID id) {
         try {
             return contractRepository.getContractById(id);
@@ -34,6 +36,7 @@ public class ContractService {
             throw new RuntimeException("Error retrieving contract by id", e);
         }
     }
+
     public List<Contract> getAllContracts() {
         try {
             return contractRepository.getAllContracts();
@@ -42,6 +45,7 @@ public class ContractService {
             throw new RuntimeException("Error retrieving all contracts", e);
         }
     }
+
     public void updateContract(UUID contractId,ContractDto updateDto) {
         try {
             final Partner partner = partnerService.getPartnerById(updateDto.partnerId());
@@ -51,6 +55,7 @@ public class ContractService {
             throw new RuntimeException("Eroor updating contract", e);
         }
     }
+
     public void deleteContract(UUID id) {
         try {
             contractRepository.deleteContract(id);
