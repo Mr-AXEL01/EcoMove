@@ -2,7 +2,6 @@ package net.axel.models.entities;
 
 import net.axel.models.enums.OfferStatus;
 import net.axel.models.enums.ReductionType;
-import org.w3c.dom.Text;
 
 import java.util.Date;
 import java.util.UUID;
@@ -14,12 +13,12 @@ public class Promotion {
     private Date startDate;
     private Date endDate;
     private ReductionType reductionType;
-    private float reductionValue;
+    private Double reductionValue;
     private String conditions;
     private OfferStatus offerStatus;
     private Contract contract;
 
-    public Promotion(UUID id, String offerName, String description, Date startDate, Date endDate, ReductionType reductionType, float reductionValue, String conditions, OfferStatus offerStatus, Contract contract) {
+    public Promotion(UUID id, String offerName, String description, Date startDate, Date endDate, ReductionType reductionType, Double reductionValue, String conditions, OfferStatus offerStatus, Contract contract) {
         this.id = id;
         this.offerName = offerName;
         this.description = description;
@@ -80,11 +79,11 @@ public class Promotion {
         this.reductionType = reductionType;
     }
 
-    public float getReductionValue() {
+    public Double getReductionValue() {
         return reductionValue;
     }
 
-    public void setReductionValue(float reductionValue) {
+    public void setReductionValue(Double reductionValue) {
         this.reductionValue = reductionValue;
     }
 
