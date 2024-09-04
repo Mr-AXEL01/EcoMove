@@ -1,6 +1,6 @@
 package net.axel.presentations;
 
-import net.axel.models.ContractDto;
+import net.axel.models.dto.ContractDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.enums.ContractStatus;
 import net.axel.services.ContractService;
