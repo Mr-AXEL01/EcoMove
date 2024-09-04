@@ -19,6 +19,7 @@ public class ContractRepository {
 
     public ContractRepository() throws SQLException {
     }
+
     public void addContract(Contract contract) throws  SQLException{
         String query = "INSERT INTO " + tableName + " (id, start_date, end_date, special_tariff, conditions_accord, renewable, contract_status, partner_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?::ContractStatus, ?)";
@@ -34,6 +35,7 @@ public class ContractRepository {
             stmt.executeUpdate();
         }
     }
+
     public Contract getContractById(UUID id) throws SQLException {
         String query = "SELECT c.*, p.* FROM contract c " +
                 "JOIN partner p ON c.partner_id = p.id " +
@@ -48,6 +50,7 @@ public class ContractRepository {
         }
         return null;
     }
+
     public List<Contract> getAllContracts() throws SQLException {
         List<Contract> contracts = new ArrayList<>();
         String query = "SELECT c.* , p.* FROM " + tableName + " c JOIN partner p ON c.partner_id = p.id";
@@ -59,6 +62,7 @@ public class ContractRepository {
         }
         return contracts;
     }
+
     public void updateContract(Contract contract) throws SQLException {
         String query = "UPDATE " + tableName + " SET start_date = ?, end_date = ?, special_tariff = ?, conditions_accord = ?, renewable = ?, contract_status = ?::ContractStatus, partner_id = ? WHERE id = ?";
         try(PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -73,6 +77,7 @@ public class ContractRepository {
             stmt.executeUpdate();
         }
     }
+
     public void deleteContract(UUID id) throws SQLException {
         String query = "DELETE FROM " + tableName + " WHERE id = ?";
         try(PreparedStatement stmt = connection.prepareStatement(query)) {
