@@ -8,6 +8,7 @@ import net.axel.models.entities.Ticket;
 import net.axel.models.enums.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,20 +37,57 @@ public class PromotionRepository {
         }
     }
 
-    public List<Promotion> getAllPromotions() throws SQLException {
-
+    public Promotion getPromotionById(UUID id) throws SQLException {
+         String query = "SELECT * FROM " + tableName + " WHERE id = ?";
+         try (PreparedStatement stmt = connection.prepareStatement(query)) {
+             stmt.setObject(1, id);
+             try(ResultSet resultSet = stmt.executeQuery()) {
+                 if(resultSet.next()) {
+                     return mapToPromotion(resultSet);
+                 }else {
+                     return null;
+                 }
+             }
+         }
     }
 
-    public Promotion getPromotionById(UUID id) throws SQLException {
-//         to do
+    public List<Promotion> getAllPromotions() throws SQLException {
+        List<Promotion> promotions = new ArrayList<>();
+        String query = "SELECT o.*, c.*, p.* FROM " + tableName + " o " +
+                "JOIN contract c ON o.contract_id = c.id " +
+                "JOIN partner p ON c.partner_id = p.id";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                promotions.add(mapToPromotion(resultSet));
+            }
+        }
+        return promotions;
     }
 
     public void updatePromotion(Promotion promotion) throws SQLException {
-//        to do
+        String query = "UPDATE " + tableName + " SET offer_name = ?, description = ?, start_date = ?, end_date = ?, reduction_type = ?::ReductionType, "+
+                "reduction_value = ?, conditions = ?, offer_status = ?::OfferStatus, contract_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, promotion.getOfferName());
+            stmt.setString(2, promotion.getDescription());
+            stmt.setDate(3, new Date(promotion.getStartDate().getTime()));
+            stmt.setDate(4, new Date(promotion.getEndDate().getTime()));
+            stmt.setString(5, promotion.getReductionType().name());
+            stmt.setDouble(6, promotion.getReductionValue());
+            stmt.setString(7, promotion.getConditions());
+            stmt.setString(8, promotion.getOfferStatus().name());
+            stmt.setObject(9, promotion.getContract().getId());
+            stmt.executeUpdate();
+        }
     }
 
     public void deletePromotion(UUID id) throws SQLException {
-//        to do
+        String query = "DELETE FROM " + tableName + " WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setObject(1, id);
+            stmt.executeUpdate();
+        }
     }
 
     private Promotion mapToPromotion(ResultSet resultSet) throws SQLException {
@@ -84,7 +122,7 @@ public class PromotionRepository {
 
         Contract contract = new Contract(contractId, contractStartDate, contractEndDate, specialTariff, conditionsAccord, renewable, contractStatus, partner);
 
-        return new Ticket(promotionId, offerName, descreption, startDate, endDate, reductionType, reductionValue, conditions, offerStatus, contract);
+        return new Promotion(promotionId, offerName, descreption, startDate, endDate, reductionType, reductionValue, conditions, offerStatus, contract);
     }
 
 }
