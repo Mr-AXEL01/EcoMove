@@ -1,4 +1,4 @@
-package net.axel.models;
+package net.axel.models.dto;
 
 
 import net.axel.models.enums.ContractStatus;
