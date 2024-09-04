@@ -2,7 +2,6 @@ package net.axel.services;
 
 import net.axel.models.dto.TicketDto;
 import net.axel.models.entities.Contract;
-import net.axel.models.entities.Partner;
 import net.axel.models.entities.Ticket;
 import net.axel.repositories.TicketRepository;
 
