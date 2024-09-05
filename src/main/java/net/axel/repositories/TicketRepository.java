@@ -34,6 +34,8 @@ public class TicketRepository {
             stmt.setString(6, ticket.getTicketStatus().name());
             stmt.setObject(7, ticket.getContract().getId());
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error adding a ticket" + e.getMessage());
         }
     }
 
