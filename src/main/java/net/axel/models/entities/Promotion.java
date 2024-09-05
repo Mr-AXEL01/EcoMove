@@ -110,4 +110,6 @@ public class Promotion {
     public void setContract(Contract contract) {
         this.contract = contract;
     }
+
+
 }
