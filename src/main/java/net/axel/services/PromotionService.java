@@ -25,7 +25,7 @@ public class PromotionService {
             final Promotion promotion = new Promotion(UUID.randomUUID(), dto.offerName(), dto.description(), dto.startDate(), dto.endDate(), dto.reductionType(), dto.reductionValue(), dto.conditions(), dto.offerStatus(), contract);
             promotionRepository.addPromotion(promotion);
         } catch (SQLException e) {
-            throw new RuntimeException("Error adding promotion", e);
+            System.err.println("Error adding promotion"+ e.getMessage());
         }
     }
 
