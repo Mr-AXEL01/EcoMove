@@ -21,7 +21,7 @@ public class PartnerUi {
         this.scanner = new Scanner(System.in);
     }
 
-    public void displayMenu() {
+    public void showMenu() {
         int choice;
         do {
             System.out.println("\n--- Partner Management Menu ---");
