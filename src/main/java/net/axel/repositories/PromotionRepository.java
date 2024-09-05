@@ -22,18 +22,22 @@ public class PromotionRepository {
     }
 
     public void addPromotion(Promotion promotion) throws SQLException {
-        String query = "INSERT INTO "+ tableName + " (id, offer_name, descriprion, start_date, end_date, reduction_type, reduction_value, conditions, offer_status, contract_id)" +
+        String query = "INSERT INTO "+ tableName + " (id, offer_name, description, start_date, end_date, reduction_type, reduction_value, conditions, offer_status, contract_id)" +
                 "VALUES(?, ?, ?, ?, ?, ?::RductionType, ?, ?, ?::OfferStatus, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setObject(1, promotion.getId());
             stmt.setString(2, promotion.getOfferName());
-            stmt.setDate(3, new Date(promotion.getStartDate().getTime()));
-            stmt.setDate(4, new Date(promotion.getEndDate().getTime()));
-            stmt.setString(5, promotion.getReductionType().name());
-            stmt.setDouble(6, promotion.getReductionValue());
-            stmt.setString(7, promotion.getConditions());
-            stmt.setString(8, promotion.getOfferStatus().name());
-            stmt.setObject(9, promotion.getContract().getId());
+            stmt.setString(3, promotion.getDescription());
+            stmt.setDate(4, new Date(promotion.getStartDate().getTime()));
+            stmt.setDate(5, new Date(promotion.getEndDate().getTime()));
+            stmt.setString(6, promotion.getReductionType().name());
+            stmt.setDouble(7, promotion.getReductionValue());
+            stmt.setString(8, promotion.getConditions());
+            stmt.setString(9, promotion.getOfferStatus().name());
+            stmt.setObject(10, promotion.getContract().getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error adding promotion"+ e.getMessage());
         }
     }
 
