@@ -111,5 +111,4 @@ public class Promotion {
         this.contract = contract;
     }
 
-
 }
