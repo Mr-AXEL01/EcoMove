@@ -37,7 +37,7 @@ public class ContractRepository {
     }
 
     public Contract getContractById(UUID id) throws SQLException {
-        String query = "SELECT c.*, p.* FROM contract c " +
+        String query = "SELECT c.*, p.* FROM " + tableName + " c " +
                 "JOIN partner p ON c.partner_id = p.id " +
                 "WHERE c.id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -54,8 +54,8 @@ public class ContractRepository {
     public List<Contract> getAllContracts() throws SQLException {
         List<Contract> contracts = new ArrayList<>();
         String query = "SELECT c.* , p.* FROM " + tableName + " c JOIN partner p ON c.partner_id = p.id";
-        try(PreparedStatement stmt = connection.prepareStatement(query)) {
-            ResultSet resultSet = stmt.executeQuery();
+        try(Statement stmt = connection.createStatement()) {
+            ResultSet resultSet = stmt.executeQuery(query);
             while (resultSet.next()) {
                 contracts.add(mapToContract(resultSet));
             }
