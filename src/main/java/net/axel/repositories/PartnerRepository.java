@@ -5,10 +5,7 @@ import net.axel.models.entities.Partner;
 import net.axel.models.enums.PartnerStatus;
 import net.axel.models.enums.TransportType;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,9 +49,9 @@ public class PartnerRepository {
 
     public List<Partner> getAllPartners() throws SQLException {
         String query = "SELECT * FROM " +tableName;
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
-            List<Partner> partners = new ArrayList<>();
+        List<Partner> partners = new ArrayList<>();
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 partners.add(mapResultSetToPartner(resultSet));
             }
