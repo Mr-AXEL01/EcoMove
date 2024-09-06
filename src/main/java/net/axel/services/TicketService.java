@@ -19,17 +19,18 @@ public class TicketService {
         this.ticketRepository = new TicketRepository();
         this.contractService = new ContractService();
     }
-    public void addTicket(TicketDto dto) {
-        try {
-            final Contract contract = contractService.getContractById(dto.ContractId());
-            if(!contract.getContractStatus().equals(ContractStatus.IN_PROGRESS)) {
-                System.out.println("Can't create ticket , check contract status.");
-            } else {
-            final Ticket ticket = new Ticket(UUID.randomUUID(), dto.transportType(), dto.purchasePrice(), dto.resellPrice(), dto.saleDate(), dto.ticketStatus(), contract);
-            ticketRepository.addTicket(ticket);
+    public boolean addTicket(TicketDto dto) {
+        final UUID contractId = dto.ContractId();
+        if(checkContractStatus(contractId)){
+            return false;
+        } else {
+            try {
+                final Ticket ticket = new Ticket(UUID.randomUUID(), dto.transportType(), dto.purchasePrice(), dto.resellPrice(), dto.saleDate(), dto.ticketStatus(), contract);
+                ticketRepository.addTicket(ticket);
+            } catch (SQLException e) {
+                System.err.println("Error adding ticket: " + e.getMessage());
             }
-        } catch (SQLException e) {
-            System.err.println("Error adding ticket: " + e.getMessage());
+            return true;
         }
     }
 
@@ -49,6 +50,14 @@ public class TicketService {
             System.err.println("Error retrieving tickets for partner: " + e.getMessage());
             return null;
         }
+    }
+
+    private boolean checkContractStatus(UUID contractId) {
+        final Contract contract = contractService.getContractById(contractId);
+        if(!contract.getContractStatus().equals(ContractStatus.IN_PROGRESS)) {
+            System.out.println("Can't create ticket , check contract status.");
+        }
+        return false;
     }
 
 
