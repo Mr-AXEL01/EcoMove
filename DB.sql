@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS Partner (
     geographical_area VARCHAR(255),
     special_conditions TEXT,
     partner_status PartnerStatus NOT NULL,
-    creation_date DATE NOT NULL
+    creation_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE IF NOT EXISTS Contract (
