@@ -21,7 +21,9 @@ public class TicketService {
     }
     public boolean addTicket(TicketDto dto) {
         final UUID contractId = dto.ContractId();
-        if(checkContractStatus(contractId)){
+        final double purchasePrice = dto.purchasePrice();
+        final double resellPrice = dto.resellPrice();
+        if(checkContractStatus(contractId) || checkPrices(purchasePrice, resellPrice)){
             return false;
         } else {
             try {
@@ -54,10 +56,19 @@ public class TicketService {
 
     private boolean checkContractStatus(UUID contractId) {
         final Contract contract = contractService.getContractById(contractId);
-        if(!contract.getContractStatus().equals(ContractStatus.IN_PROGRESS)) {
-            System.out.println("Can't create ticket , check contract status.");
+        if (contract.getContractStatus().equals(ContractStatus.IN_PROGRESS)) {
+            return true;
+        } else {
+            System.out.println("Can't create ticket, check contract status.");
+            return false;
         }
-        return false;
+    }
+
+    private boolean checkPrices(double purchasePrice, double resellPrice) {
+        if(purchasePrice > resellPrice) {
+            System.out.println("The purchase price is higher than the resell price, try again with some profit.\n");
+        }
+        return purchasePrice > resellPrice;
     }
 
 
