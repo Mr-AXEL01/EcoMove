@@ -62,8 +62,7 @@ public class PartnerUi {
 
     private void listAllPartners() {
         List<Partner> partners = partnerService.getAllPartners();
-        System.out.println("\n--- List of Partners ---");
-        System.out.println("");
+        System.out.println("\n--- List of Partners ---\n");
         if (partners != null && !partners.isEmpty()) {
             for (Partner partner : partners) {
                 System.out.println("|-----------------------------------------------------------|");
@@ -100,31 +99,88 @@ public class PartnerUi {
         try {
             System.out.print("\nEnter Company Name: ");
             String companyName = scanner.nextLine();
-            System.out.print("Enter Commercial Contact: ");
+            if (companyName.trim().isEmpty()) {
+                System.out.println("Company Name cannot be empty.");
+                return;
+            }
+
+            System.out.print("Enter Comercial Contact: ");
             String comercialContact = scanner.nextLine();
+            if (comercialContact.trim().isEmpty()) {
+                System.out.println("Comercial Contact cannot be empty.");
+                return;
+            }
+
             System.out.print("Enter Transport Type (PLANE, TRAIN, BUS, TAXI): ");
             String transportTypeStr = scanner.nextLine();
-            TransportType transportType = TransportType.valueOf(transportTypeStr.toUpperCase());
+            if (transportTypeStr.trim().isEmpty()) {
+                System.out.println("Transport Type cannot be empty.");
+                return;
+            }
+
+            TransportType transportType;
+            try {
+                transportType = TransportType.valueOf(transportTypeStr.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid Transport Type. Please enter PLANE, TRAIN, BUS, or TAXI.");
+                return;
+            }
+
             System.out.print("Enter Geographical Area: ");
             String geographicalArea = scanner.nextLine();
+            if (geographicalArea.trim().isEmpty()) {
+                System.out.println("Geographical Area cannot be empty.");
+                return;
+            }
+
             System.out.print("Enter Special Conditions: ");
             String specialConditions = scanner.nextLine();
+            if (specialConditions.trim().isEmpty()) {
+                System.out.println("Special Conditions cannot be empty.");
+                return;
+            }
+
             System.out.print("Enter Partner Status (ACTIVE, INACTIVE, SUSPENDED): ");
             String partnerStatusStr = scanner.nextLine();
-            PartnerStatus partnerStatus = PartnerStatus.valueOf(partnerStatusStr.toUpperCase());
+            if (partnerStatusStr.trim().isEmpty()) {
+                System.out.println("Partner Status cannot be empty.");
+                return;
+            }
+
+            PartnerStatus partnerStatus;
+            try {
+                partnerStatus = PartnerStatus.valueOf(partnerStatusStr.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid Partner Status. Please enter ACTIVE, INACTIVE, or SUSPENDED.");
+                return;
+            }
 
             Partner newPartner = new Partner(UUID.randomUUID(), companyName, comercialContact, transportType, geographicalArea, specialConditions, partnerStatus);
             partnerService.addPartner(newPartner);
             System.out.println("Partner added successfully!");
+
         } catch (Exception e) {
-            System.out.println("Error adding contract: " + e.getMessage());
+            System.out.println("Error adding partner: " + e.getMessage());
         }
     }
 
     private void updatePartner() {
         System.out.print("\nEnter Partner ID: ");
-        String id = scanner.nextLine();
-        Partner partner = partnerService.getPartnerById(UUID.fromString(id));
+        String idStr = scanner.nextLine();
+
+        if(idStr.trim().isEmpty()) {
+            System.out.println("Partner ID can't be empty.");
+            return;
+        }
+        UUID id;
+        try {
+            id = UUID.fromString(idStr);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid Partner ID format.");
+            return;
+        }
+        Partner partner = partnerService.getPartnerById(id);
+
         if (partner != null) {
             System.out.print("Enter New Company Name (" + partner.getCompanyName() + "): ");
             String companyName = scanner.nextLine();

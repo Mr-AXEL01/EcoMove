@@ -6,6 +6,7 @@ import net.axel.models.enums.OfferStatus;
 import net.axel.models.enums.ReductionType;
 import net.axel.services.PromotionService;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
@@ -77,38 +78,116 @@ public class PromotionUi {
     private void addNewPromotion() {
         try {
             scanner.nextLine();
+
             System.out.print("Enter offer name: ");
             String offerName = scanner.nextLine();
+            if (offerName.trim().isEmpty()) {
+                System.out.println("Offer name can't be empty.");
+                return;
+            }
 
             System.out.print("Enter description: ");
             String description = scanner.nextLine();
+            if (description.trim().isEmpty()) {
+                System.out.println("Description can't be empty.");
+                return;
+            }
 
             System.out.print("Enter start date (YYYY-MM-DD): ");
             String startDateStr = scanner.nextLine();
-            java.sql.Date startDate = java.sql.Date.valueOf(startDateStr);
+            if (startDateStr.trim().isEmpty()) {
+                System.out.println("Start date can't be empty.");
+                return;
+            }
+            Date startDate;
+            try {
+                startDate = Date.valueOf(startDateStr);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid start date format. Please use 'YYYY-MM-DD'.");
+                return;
+            }
 
             System.out.print("Enter end date (YYYY-MM-DD): ");
             String endDateStr = scanner.nextLine();
-            java.sql.Date endDate = java.sql.Date.valueOf(endDateStr);
+            if (endDateStr.trim().isEmpty()) {
+                System.out.println("End date can't be empty.");
+                return;
+            }
+            Date endDate;
+            try {
+                endDate = Date.valueOf(endDateStr);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid end date format. Please use 'YYYY-MM-DD'.");
+                return;
+            }
+
+            if (startDate.after(endDate)) {
+                System.out.println("Error: Start Date cannot be after End Date.");
+                return;
+            }
 
             System.out.print("Enter reduction type (PERCENTAGE, FIXED_AMOUNT): ");
             String reductionTypeStr = scanner.nextLine();
-            ReductionType reductionType = ReductionType.valueOf(reductionTypeStr.toUpperCase());
+            if (reductionTypeStr.trim().isEmpty()) {
+                System.out.println("Reduction type can't be empty.");
+                return;
+            }
+            ReductionType reductionType;
+            try {
+                reductionType = ReductionType.valueOf(reductionTypeStr.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid reduction type. Please use PERCENTAGE or FIXED_AMOUNT.");
+                return;
+            }
 
             System.out.print("Enter reduction value: ");
-            double reductionValue = scanner.nextDouble();
-            scanner.nextLine();
+            String reductionValueStr = scanner.nextLine();
+            if (reductionValueStr.trim().isEmpty()) {
+                System.out.println("Reduction value can't be empty.");
+                return;
+            }
+            double reductionValue;
+            try {
+                reductionValue = Double.parseDouble(reductionValueStr);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid reduction value. Please enter a valid number.");
+                return;
+            }
 
             System.out.print("Enter conditions: ");
             String conditions = scanner.nextLine();
+            if (conditions.trim().isEmpty()) {
+                System.out.println("Conditions can't be empty.");
+                return;
+            }
 
             System.out.print("Enter offer status (ACTIVE, INACTIVE, SUSPENDED): ");
             String offerStatusStr = scanner.nextLine();
-            OfferStatus offerStatus = OfferStatus.valueOf(offerStatusStr.toUpperCase());
+            if (offerStatusStr.trim().isEmpty()) {
+                System.out.println("Offer status can't be empty.");
+                return;
+            }
+            OfferStatus offerStatus;
+            try {
+                offerStatus = OfferStatus.valueOf(offerStatusStr.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid offer status. Please use ACTIVE, INACTIVE, or SUSPENDED.");
+                return;
+            }
 
             System.out.print("Enter contract ID: ");
             String contractIdStr = scanner.nextLine();
-            UUID contractId = UUID.fromString(contractIdStr);
+            if (contractIdStr.trim().isEmpty()) {
+                System.out.println("Contract ID can't be empty.");
+                return;
+            }
+            UUID contractId;
+            try {
+                contractId = UUID.fromString(contractIdStr);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid contract ID format.");
+                return;
+            }
 
             PromotionDto promotionDto = new PromotionDto(
                     offerName,
@@ -177,11 +256,11 @@ public class PromotionUi {
 
             System.out.print("Enter start date (YYYY-MM-DD): ");
             String startDateStr = scanner.nextLine();
-            java.sql.Date startDate = java.sql.Date.valueOf(startDateStr);
+            Date startDate = Date.valueOf(startDateStr);
 
             System.out.print("Enter end date (YYYY-MM-DD): ");
             String endDateStr = scanner.nextLine();
-            java.sql.Date endDate = java.sql.Date.valueOf(endDateStr);
+            Date endDate = Date.valueOf(endDateStr);
 
             System.out.print("Enter reduction type (PERCENTAGE, FIXED): ");
             String reductionTypeStr = scanner.nextLine();

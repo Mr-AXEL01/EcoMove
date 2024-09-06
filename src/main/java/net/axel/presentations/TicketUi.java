@@ -8,6 +8,7 @@ import net.axel.models.enums.TransportType;
 import net.axel.services.PartnerService;
 import net.axel.services.TicketService;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
@@ -89,19 +90,37 @@ public class TicketUi {
     private void addNewTicket() {
         System.out.print("Enter transport type (PLANE, TRAIN, BUS): ");
         String transportTypeStr = scanner.nextLine();
+        if(transportTypeStr.trim().isEmpty()) {
+            System.out.println("Transport type is empty.");
+            return;
+        }
         TransportType transportType = TransportType.valueOf(transportTypeStr.toUpperCase());
 
         System.out.print("Enter purchase price: ");
-        double purchasePrice = scanner.nextDouble();
+        String purchasePriceStr = scanner.nextLine();
+        if(purchasePriceStr.trim().isEmpty()) {
+            System.out.println("Purchase price is empty.");
+            return;
+        }
+        double purchasePrice = Double.parseDouble(purchasePriceStr);
 
         System.out.print("Enter resell price: ");
-        double resellPrice = scanner.nextDouble();
+        String resellPriceStr = scanner.nextLine();
+        if(resellPriceStr.trim().isEmpty()) {
+            System.out.println("Resell price is empty.");
+            return;
+        }
+        double resellPrice = Double.parseDouble(resellPriceStr);
 
-        scanner.nextLine();
+//        scanner.nextLine();
 
         System.out.print("Enter sale date (YYYY-MM-DD): ");
         String saleDateStr = scanner.nextLine();
-        java.sql.Date saleDate = java.sql.Date.valueOf(saleDateStr);
+        if(saleDateStr.trim().isEmpty()) {
+            System.out.println("The sale date is empty.");
+            return;
+        }
+        Date saleDate = Date.valueOf(saleDateStr);
 
         System.out.print("Enter ticket status (SOLD, PENDING, CANCELLED): ");
         String ticketStatusStr = scanner.nextLine();
@@ -109,6 +128,10 @@ public class TicketUi {
 
         System.out.print("Enter contract ID: ");
         String contractIdStr = scanner.nextLine();
+        if (contractIdStr.trim().isEmpty()) {
+            System.out.println("The contract ID is empty.");
+            return;
+        }
         UUID contractId = UUID.fromString(contractIdStr);
 
         final TicketDto dto = new TicketDto(
@@ -119,8 +142,7 @@ public class TicketUi {
                 ticketStatus,
                 contractId
         );
-        ticketService.addTicket(dto);
-        System.out.println("Ticket added successfully.\n");
+        if(ticketService.addTicket(dto)) System.out.println("Ticket added successfully.\n");
     }
 
 }

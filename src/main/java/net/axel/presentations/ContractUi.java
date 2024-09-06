@@ -98,19 +98,85 @@ public class ContractUi {
 
     private void addNewContract() {
         try {
-            Date startDate = getDateFromUser("Enter The Start Date (yyyy-MM-dd): ");
-            Date endDate   = getDateFromUser("Enter The End Date (yyyy-MM-dd): ");
+            System.out.print("\nEnter The Start Date (yyyy-MM-dd): ");
+            String startDateStr = scanner.nextLine();
+            if (startDateStr.trim().isEmpty()) {
+                System.out.println("Start Date can't be empty.");
+                return;
+            }
+            Date startDate = dateFormat.parse(startDateStr);
 
-            if (startDate.after(endDate)) {
-                System.out.println("Error: Start date cannot be after end date.");
+            System.out.print("Enter The End Date (yyyy-MM-dd): ");
+            String endDateStr = scanner.nextLine();
+            if (endDateStr.trim().isEmpty()) {
+                System.out.println("End Date can't be empty.");
+                return;
+            }
+            Date endDate = dateFormat.parse(endDateStr);
+
+
+            System.out.print("Enter The Special Tariff ($.$$ or $%): ");
+            String specialTariffStr = scanner.nextLine();
+            if (specialTariffStr.trim().isEmpty()) {
+                System.out.println("Special Tariff can't be empty.");
+                return;
+            }
+            double specialTariff;
+            try {
+                specialTariff = Double.parseDouble(specialTariffStr);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid Special Tariff. Please enter a valid number.");
                 return;
             }
 
-            double specialTariff = getDoubleFromUser("Enter The Special Tariff ($.$$ or $%): ");
-            String conditionsAccord = getStringFromUser("Enter The Conditions Accord: ");
-            boolean renewable = getBooleanFromUser("Is The Contract Renewable? (true or false): ");
-            ContractStatus contractStatus = getContractStatusFromUser();
-            UUID partnerId = getUUIDFromUser("Enter Partner ID: ");
+            System.out.print("Enter The Conditions Accord: ");
+            String conditionsAccord = scanner.nextLine();
+            if (conditionsAccord.trim().isEmpty()) {
+                System.out.println("Conditions Accord can't be empty.");
+                return;
+            }
+
+            System.out.print("Is The Contract Renewable? (true or false): ");
+            String renewableStr = scanner.nextLine();
+            if (renewableStr.trim().isEmpty()) {
+                System.out.println("Renewable field can't be empty.");
+                return;
+            }
+            boolean renewable;
+            try {
+                renewable = Boolean.parseBoolean(renewableStr);
+            } catch (Exception e) {
+                System.out.println("Invalid input for Renewable. Please enter 'true' or 'false'.");
+                return;
+            }
+
+            System.out.print("Enter Contract Status (IN_PROGRESS, COMPLETE, SUSPENDED): ");
+            String contractStatusStr = scanner.nextLine();
+            if (contractStatusStr.trim().isEmpty()) {
+                System.out.println("Contract Status can't be empty.");
+                return;
+            }
+            ContractStatus contractStatus;
+            try {
+                contractStatus = ContractStatus.valueOf(contractStatusStr.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid Contract Status. Please enter IN_PROGRESS, COMPLETE, or SUSPENDED.");
+                return;
+            }
+
+            System.out.print("Enter Partner ID: ");
+            String partnerIdStr = scanner.nextLine();
+            if (partnerIdStr.trim().isEmpty()) {
+                System.out.println("Partner ID can't be empty.");
+                return;
+            }
+            UUID partnerId;
+            try {
+                partnerId = UUID.fromString(partnerIdStr);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid Partner ID format.");
+                return;
+            }
 
             final ContractDto dto = new ContractDto(
                     startDate,
@@ -121,8 +187,8 @@ public class ContractUi {
                     contractStatus,
                     partnerId
             );
-            contractService.addContract(dto);
-            System.out.println("Contract added successfully!");
+            if(contractService.addContract(dto)) System.out.println("Contract added successfully!");
+
         } catch (ParseException e) {
             System.out.println("Error: Invalid date format. Please use 'yyyy-MM-dd'.");
         } catch (Exception e) {
@@ -189,93 +255,20 @@ public class ContractUi {
     }
 
     private void deleteContract() {
-        UUID id = getUUIDFromUser("\nEnter Contract ID :");
+        System.out.println("\nEnter Contract ID :");
+        String idStr = scanner.nextLine();
+        if (idStr.trim().isEmpty()) {
+            System.out.println("Contract Id can't be empty.");
+            return;
+        }
+        UUID id;
+        try {
+            id = UUID.fromString(idStr);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid Partner ID format.");
+            return;
+        }
         contractService.deleteContract(id);
-        System.out.println("Contract Deleted Successfully");
     }
 
-
-    private Date getDateFromUser(String prompt) throws ParseException {
-        while (true) {
-            System.out.print(prompt);
-            String dateInput = scanner.nextLine();
-            if (!dateInput.isEmpty()) {
-                try {
-                    return dateFormat.parse(dateInput);
-                } catch (ParseException e) {
-                    System.out.println("Invalid date format. Please enter in 'yyyy-MM-dd' format.");
-                }
-            } else {
-                System.out.println("Date cannot be empty.");
-            }
-        }
-    }
-
-    private double getDoubleFromUser(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String input = scanner.nextLine();
-            if (!input.isEmpty()) {
-                try {
-                    return Double.parseDouble(input);
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid number format. Please enter a valid number.");
-                }
-            } else {
-                System.out.println("Input cannot be empty.");
-            }
-        }
-    }
-
-    private String getStringFromUser(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String input = scanner.nextLine();
-            if (!input.isEmpty()) {
-                return input;
-            } else {
-                System.out.println("Input cannot be empty.");
-            }
-        }
-    }
-
-    private boolean getBooleanFromUser(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String input = scanner.nextLine().toLowerCase();
-            if (input.equals("true") || input.equals("false")) {
-                return Boolean.parseBoolean(input);
-            } else {
-                System.out.println("Invalid input. Please enter 'true' or 'false'.");
-            }
-        }
-    }
-
-    private ContractStatus getContractStatusFromUser() {
-        while (true) {
-            System.out.print("Enter Contract Status (IN_PROGRESS, COMPLETE, SUSPENDED): ");
-            String input = scanner.nextLine().toUpperCase();
-            try {
-                return ContractStatus.valueOf(input);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Invalid status. Please enter one of the following: IN_PROGRESS, COMPLETE, SUSPENDED.");
-            }
-        }
-    }
-
-    private UUID getUUIDFromUser(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String input = scanner.nextLine();
-            if (!input.isEmpty()) {
-                try {
-                    return UUID.fromString(input);
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Invalid UUID format. Please enter a valid UUID.");
-                }
-            } else {
-                System.out.println("UUID cannot be empty.");
-            }
-        }
-    }
 }
