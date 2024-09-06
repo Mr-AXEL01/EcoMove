@@ -6,6 +6,7 @@ import net.axel.models.entities.Partner;
 import net.axel.repositories.ContractRepository;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,11 +20,18 @@ public class ContractService {
         this.partnerService = new PartnerService();
     }
 
-    public void addContract(ContractDto dto) {
+    public boolean addContract(ContractDto dto) {
+        final Date StartDate = dto.startDate();
+        final Date endDate = dto.endDate();
         try {
-            final Partner partner = partnerService.getPartnerById(dto.partnerId());
-            final Contract contract = new Contract(UUID.randomUUID(), dto.startDate(), dto.endDate(), dto.specialTariff(), dto.conditionAccord(), dto.renewable(), dto.status(), partner);
-            contractRepository.addContract(contract);
+            if(checkDates(StartDate, endDate)) {
+                final Partner partner = partnerService.getPartnerById(dto.partnerId());
+                final Contract contract = new Contract(UUID.randomUUID(), dto.startDate(), dto.endDate(), dto.specialTariff(), dto.conditionAccord(), dto.renewable(), dto.status(), partner);
+                contractRepository.addContract(contract);
+                return true;
+            } else {
+                return false;
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Error adding contract", e);
         }
@@ -62,6 +70,13 @@ public class ContractService {
         } catch ( SQLException e) {
             throw new RuntimeException("Error deleting contract", e);
         }
+    }
+
+    private boolean checkDates(Date startDate, Date endDate) {
+        if (startDate.after(endDate)) {
+            System.out.println("Start date can't be after end date, try again with logic dates.");
+        }
+        return false;
     }
 
 }
