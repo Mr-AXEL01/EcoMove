@@ -22,7 +22,7 @@ public class Menu {
     public void showMainMenu() {
         int choice;
         do {
-            System.out.println("--- Main Management Menu ---");
+            System.out.println("\n--- Main Management Menu ---\n");
             System.out.println("1. Partner Management");
             System.out.println("2. Contract Management");
             System.out.println("3. Promotion Management");

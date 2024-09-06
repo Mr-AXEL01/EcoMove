@@ -29,7 +29,7 @@ public class TicketUi {
     public void showMenu() {
         int choice;
         do {
-            System.out.println("--- Ticket Management Menu ---\n");
+            System.out.println("\n--- Ticket Management Menu ---\n");
             System.out.println("1. List all tickets");
             System.out.println("2. List all tickets of a partner");
             System.out.println("3. Add a new ticket");

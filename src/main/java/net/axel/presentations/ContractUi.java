@@ -28,7 +28,7 @@ public class ContractUi {
     public void showMenu() {
         int choice;
         do {
-            System.out.println("\n--- Contract Management Menu ---");
+            System.out.println("\n--- Contract Management Menu ---\n");
             System.out.println("1. List all contracts");
             System.out.println("2. View contract details");
             System.out.println("3. Add a new contract");

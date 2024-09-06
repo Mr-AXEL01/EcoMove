@@ -24,7 +24,7 @@ public class PartnerUi {
     public void showMenu() {
         int choice;
         do {
-            System.out.println("\n--- Partner Management Menu ---");
+            System.out.println("\n--- Partner Management Menu ---\n");
             System.out.println("1. List all partners");
             System.out.println("2. View partner details");
             System.out.println("3. Add a new partner");

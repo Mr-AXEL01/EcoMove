@@ -25,7 +25,7 @@ public class PromotionUi {
     public void showMenu() {
         int choice;
         do {
-            System.out.println("--- Promotion Management Menu ---");
+            System.out.println("\n--- Promotion Management Menu ---\n");
             System.out.println("1. List all promotions");
             System.out.println("2. Add a new promotion");
             System.out.println("3. Find promotion by ID");
