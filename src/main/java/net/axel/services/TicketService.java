@@ -20,10 +20,10 @@ public class TicketService {
         this.contractService = new ContractService();
     }
     public boolean addTicket(TicketDto dto) {
-        final UUID contractId = dto.ContractId();
+        final Contract contract = contractService.getContractById(dto.ContractId());
         final double purchasePrice = dto.purchasePrice();
         final double resellPrice = dto.resellPrice();
-        if(checkContractStatus(contractId) || checkPrices(purchasePrice, resellPrice)){
+        if(checkContractStatus(contract) || checkPrices(purchasePrice, resellPrice)){
             return false;
         } else {
             try {
@@ -54,8 +54,7 @@ public class TicketService {
         }
     }
 
-    private boolean checkContractStatus(UUID contractId) {
-        final Contract contract = contractService.getContractById(contractId);
+    private boolean checkContractStatus(Contract contract) {
         if (contract.getContractStatus().equals(ContractStatus.IN_PROGRESS)) {
             return true;
         } else {
