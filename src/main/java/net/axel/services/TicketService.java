@@ -23,7 +23,7 @@ public class TicketService {
         final Contract contract = contractService.getContractById(dto.ContractId());
         final double purchasePrice = dto.purchasePrice();
         final double resellPrice = dto.resellPrice();
-        if(checkContractStatus(contract) || checkPrices(purchasePrice, resellPrice)){
+        if(!checkContractStatus(contract) || checkPrices(purchasePrice, resellPrice)){
             return false;
         } else {
             try {
@@ -58,7 +58,7 @@ public class TicketService {
         if (contract.getContractStatus().equals(ContractStatus.IN_PROGRESS)) {
             return true;
         } else {
-            System.out.println("Can't create ticket, check contract status.");
+            System.out.println("Can't create ticket, check contract status.\n");
             return false;
         }
     }
