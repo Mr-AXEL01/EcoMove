@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class ContractRepository {
 
-    private final String tableName = "contract";
+    private final String tableName = "contracts";
     private final Connection connection = DatabaseConnection.getInstance().getConnection();
 
     public ContractRepository() throws SQLException {

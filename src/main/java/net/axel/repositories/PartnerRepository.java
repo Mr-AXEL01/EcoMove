@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class PartnerRepository {
-    private final String tableName = "partner";
+    private final String tableName = "partners";
     private final Connection connection = DatabaseConnection.getInstance().getConnection();
 
     public PartnerRepository() throws SQLException {

@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class TicketRepository {
 
-    private final String tableName = "ticket";
+    private final String tableName = "tickets";
     private final Connection connection = DatabaseConnection.getInstance().getConnection();
 
     public TicketRepository() throws SQLException{

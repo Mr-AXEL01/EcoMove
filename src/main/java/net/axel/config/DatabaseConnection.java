@@ -33,7 +33,7 @@ public class DatabaseConnection {
 
     private void init() throws SQLException {
         final String URL = "jdbc:postgresql://localhost:5432/ecomove";
-        final String USER = "postgres";
+        final String USER = "axel";
         final String PASSWORD = "6631";
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);

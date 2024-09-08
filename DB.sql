@@ -16,7 +16,7 @@
 
 -- create tables
 
-CREATE TABLE IF NOT EXISTS Partner (
+CREATE TABLE IF NOT EXISTS Partners (
     id UUID PRIMARY KEY,
     company_name VARCHAR(255) NOT NULL,
     comercial_contact VARCHAR(255),
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Partner (
     creation_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
-CREATE TABLE IF NOT EXISTS Contract (
+CREATE TABLE IF NOT EXISTS Contracts (
     id UUID PRIMARY KEY,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
@@ -36,10 +36,10 @@ CREATE TABLE IF NOT EXISTS Contract (
     renewable BOOLEAN NOT NULL,
     contract_status ContractStatus NOT NULL,
     partner_id UUID,
-    FOREIGN KEY (partner_id) REFERENCES Partner(id)
+    FOREIGN KEY (partner_id) REFERENCES Partners(id)
 );
 
-CREATE TABLE IF NOT EXISTS Promotion (
+CREATE TABLE IF NOT EXISTS Promotions (
     id UUID PRIMARY KEY,
     offer_name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -50,10 +50,10 @@ CREATE TABLE IF NOT EXISTS Promotion (
     conditions TEXT,
     offer_status OfferStatus NOT NULL,
     contract_id UUID,
-    FOREIGN KEY (contract_id) REFERENCES Contract(id)
+    FOREIGN KEY (contract_id) REFERENCES Contracts(id)
 );
 
-CREATE TABLE IF NOT EXISTS Ticket (
+CREATE TABLE IF NOT EXISTS Tickets (
     id UUID PRIMARY KEY,
     transport_type TransportType NOT NULL,
     purchase_price REAL NOT NULL,
@@ -61,6 +61,6 @@ CREATE TABLE IF NOT EXISTS Ticket (
     sale_date TIMESTAMP,
     ticket_status TicketStatus NOT NULL,
     contract_id UUID,
-    FOREIGN KEY (contract_id) REFERENCES Contract(id)
+    FOREIGN KEY (contract_id) REFERENCES Contracts(id)
 );
 

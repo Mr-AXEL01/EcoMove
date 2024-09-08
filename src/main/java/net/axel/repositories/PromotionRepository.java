@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class PromotionRepository {
 
-    private final String tableName = "promotion";
+    private final String tableName = "promotions";
     private final Connection connection = DatabaseConnection.getInstance().getConnection();
 
     public PromotionRepository() throws SQLException {
