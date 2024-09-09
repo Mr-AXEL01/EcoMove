@@ -3,7 +3,7 @@ package net.axel.presentations;
 import net.axel.models.dto.ContractDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.enums.ContractStatus;
-import net.axel.services.ContractService;
+import net.axel.services.implementations.ContractService;
 
 import java.sql.SQLException;
 import java.text.ParseException;
