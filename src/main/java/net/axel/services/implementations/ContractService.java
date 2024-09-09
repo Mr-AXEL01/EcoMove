@@ -4,13 +4,14 @@ import net.axel.models.dto.ContractDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Partner;
 import net.axel.repositories.ContractRepository;
+import net.axel.services.interfaces.IContractService;
 
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public class ContractService {
+public class ContractService implements IContractService {
 
     private final ContractRepository contractRepository;
     private final PartnerService partnerService;
@@ -20,6 +21,7 @@ public class ContractService {
         this.partnerService = new PartnerService();
     }
 
+    @Override
     public boolean addContract(ContractDto dto) {
         final Date StartDate = dto.startDate();
         final Date endDate = dto.endDate();
@@ -37,6 +39,7 @@ public class ContractService {
         }
     }
 
+    @Override
     public Contract getContractById(UUID id) {
         try {
             return contractRepository.getContractById(id);
@@ -45,6 +48,7 @@ public class ContractService {
         }
     }
 
+    @Override
     public List<Contract> getAllContracts() {
         try {
             return contractRepository.getAllContracts();
@@ -54,6 +58,7 @@ public class ContractService {
         }
     }
 
+    @Override
     public void updateContract(UUID contractId,ContractDto updateDto) {
         try {
             final Partner partner = partnerService.getPartnerById(updateDto.partnerId());
@@ -64,6 +69,7 @@ public class ContractService {
         }
     }
 
+    @Override
     public void deleteContract(UUID id) {
         try {
             contractRepository.deleteContract(id);

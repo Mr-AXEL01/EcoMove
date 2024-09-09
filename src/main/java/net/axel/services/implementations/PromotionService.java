@@ -4,21 +4,24 @@ import net.axel.models.dto.PromotionDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Promotion;
 import net.axel.repositories.PromotionRepository;
+import net.axel.services.interfaces.IContractService;
+import net.axel.services.interfaces.IPromotionService;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public class PromotionService {
+public class PromotionService implements IPromotionService {
 
     private final PromotionRepository promotionRepository;
-    private final ContractService contractService;
+    private final IContractService contractService;
 
-    public PromotionService() throws SQLException {
+    public PromotionService(IContractService contractService) throws SQLException {
         this.promotionRepository = new PromotionRepository();
-        this.contractService = new ContractService();
+        this.contractService = contractService;
     }
 
+    @Override
     public void addPromotion(PromotionDto dto) throws SQLException {
         try {
             final Contract contract = contractService.getContractById(dto.contractId());
@@ -29,6 +32,7 @@ public class PromotionService {
         }
     }
 
+    @Override
     public Promotion getPromotionById(UUID id) throws SQLException {
         try {
             return promotionRepository.getPromotionById(id);
@@ -37,6 +41,7 @@ public class PromotionService {
         }
     }
 
+    @Override
     public List<Promotion> getAllPromotions() throws SQLException {
         try {
             return promotionRepository.getAllPromotions();
@@ -45,6 +50,7 @@ public class PromotionService {
         }
     }
 
+    @Override
     public void updatePromotion(UUID promotionId, PromotionDto dto) throws SQLException {
         try {
             final Contract contract = contractService.getContractById(dto.contractId());
@@ -55,6 +61,7 @@ public class PromotionService {
         }
     }
 
+    @Override
     public void deletePromotion(UUID id) throws SQLException {
         try {
             promotionRepository.deletePromotion(id);
