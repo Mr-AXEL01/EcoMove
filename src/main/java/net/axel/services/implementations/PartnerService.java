@@ -33,19 +33,11 @@ public class PartnerService implements IPartnerService {
 
     @Override
     public void updatePartner(Partner partner) {
-        try {
-            partnerRepository.updatePartner(partner);
-        } catch (SQLException e) {
-            throw new RuntimeException("Error updating partner", e);
-        }
+        partnerRepository.updatePartner(partner);
     }
 
     @Override
     public void deletePartner(UUID id) {
-        try {
-            partnerRepository.deletePartner(id);
-        } catch (SQLException e) {
-            throw new RuntimeException("Error deleting partner", e);
-        }
+        partnerRepository.deletePartner(id);
     }
 }
