@@ -2,12 +2,13 @@ package net.axel.services;
 
 import net.axel.models.entities.Partner;
 import net.axel.repositories.PartnerRepository;
+import net.axel.services.interfaces.IPartnerService;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public class PartnerService {
+public class PartnerService implements IPartnerService {
 
     private final PartnerRepository partnerRepository;
 
@@ -15,6 +16,7 @@ public class PartnerService {
         this.partnerRepository = new PartnerRepository();
     }
 
+    @Override
     public void addPartner(Partner partner) {
         try {
             partnerRepository.addPartner(partner);
@@ -23,6 +25,7 @@ public class PartnerService {
         }
     }
 
+    @Override
     public Partner getPartnerById(UUID id) {
         try {
             return partnerRepository.getPartnerById(id);
@@ -31,6 +34,7 @@ public class PartnerService {
         }
     }
 
+    @Override
     public List<Partner> getAllPartners() {
         try {
             return partnerRepository.getAllPartners();
@@ -39,6 +43,7 @@ public class PartnerService {
         }
     }
 
+    @Override
     public void updatePartner(Partner partner) {
         try {
             partnerRepository.updatePartner(partner);
@@ -47,6 +52,7 @@ public class PartnerService {
         }
     }
 
+    @Override
     public void deletePartner(UUID id) {
         try {
             partnerRepository.deletePartner(id);
