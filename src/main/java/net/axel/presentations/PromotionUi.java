@@ -60,18 +60,14 @@ public class PromotionUi {
     }
 
     private void listAllPromotions() {
-        try {
-            List<Promotion> promotions = promotionService.getAllPromotions();
-            if (promotions != null && !promotions.isEmpty()) {
-                System.out.println("|-----------------------------------------------------------|");
-                for (Promotion promotion : promotions) {
-                    System.out.println("| " + promotion.getId() + " | " + promotion.getOfferName() + " | " + promotion.getReductionType() + " | " + promotion.getOfferStatus());
-                }
-            } else {
-                System.out.println("No promotions available.");
+        List<Promotion> promotions = promotionService.getAllPromotions();
+        if (promotions != null && !promotions.isEmpty()) {
+            System.out.println("|-----------------------------------------------------------|");
+            for (Promotion promotion : promotions) {
+                System.out.println("| " + promotion.getId() + " | " + promotion.getOfferName() + " | " + promotion.getReductionType() + " | " + promotion.getOfferStatus());
             }
-        } catch (SQLException e) {
-            System.err.println("Error retrieving promotions: " + e.getMessage());
+        } else {
+            System.out.println("No promotions available.");
         }
     }
 
@@ -203,9 +199,6 @@ public class PromotionUi {
 
             promotionService.addPromotion(promotionDto);
             System.out.println("Promotion added successfully.");
-
-        } catch (SQLException e) {
-            System.err.println("Error adding promotion: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             System.err.println("Invalid input: " + e.getMessage());
         }
@@ -235,8 +228,6 @@ public class PromotionUi {
             } else {
                 System.out.println("No promotion found with the given ID.");
             }
-        } catch (SQLException e) {
-            System.err.println("Error retrieving promotion by ID: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             System.err.println("Invalid promotion ID: " + e.getMessage());
         }
@@ -295,24 +286,17 @@ public class PromotionUi {
 
             promotionService.updatePromotion(promotionId, promotionDto);
             System.out.println("Promotion updated successfully.");
-
-        } catch (SQLException e) {
-            System.err.println("Error updating promotion: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             System.err.println("Invalid input: " + e.getMessage());
         }
     }
 
     private void deletePromotion() {
-        try {
-            System.out.print("Enter promotion ID: ");
-            String promotionIdStr = scanner.nextLine();
-            UUID promotionId = UUID.fromString(promotionIdStr);
+        System.out.print("Enter promotion ID: ");
+        String promotionIdStr = scanner.nextLine();
+        UUID promotionId = UUID.fromString(promotionIdStr);
 
-            promotionService.deletePromotion(promotionId);
-            System.out.println("Promotion deleted successfully.");
-        } catch (SQLException e) {
-            System.err.println("Error deleting promotion: " + e.getMessage());
-        }
+        promotionService.deletePromotion(promotionId);
+        System.out.println("Promotion deleted successfully.");
     }
 }
