@@ -20,7 +20,8 @@ public class TicketService implements ITicketService {
         this.ticketRepository = new TicketRepository();
         this.contractService = new ContractService();
     }
-    
+
+    @Override
     public boolean addTicket(TicketDto dto) {
         final Contract contract = contractService.getContractById(dto.ContractId());
         final double purchasePrice = dto.purchasePrice();
@@ -38,6 +39,7 @@ public class TicketService implements ITicketService {
         }
     }
 
+    @Override
     public List<Ticket> getAllTickets() {
         try {
             return ticketRepository.getAllTickets();
@@ -47,6 +49,7 @@ public class TicketService implements ITicketService {
         }
     }
 
+    @Override
     public List<Ticket> getTicketsByPartner(UUID partnerId) {
         try {
             return ticketRepository.getTicketsByPartner(partnerId);
