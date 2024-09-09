@@ -1,9 +1,9 @@
 package net.axel.presentations;
 
-import net.axel.models.entities.Partner;
-import net.axel.models.entities.Ticket;
-import net.axel.services.PartnerService;
-import net.axel.services.TicketService;
+import net.axel.services.implementations.ContractService;
+import net.axel.services.implementations.PartnerService;
+import net.axel.services.implementations.PromotionService;
+import net.axel.services.implementations.TicketService;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -17,9 +17,9 @@ public class Menu {
     private final Scanner scanner;
 
     public Menu() throws SQLException {
-        this.partnerUi = new PartnerUi();
+        this.partnerUi = new PartnerUi(new PartnerService());
         this.contractUi = new ContractUi();
-        this.promotionUi = new PromotionUi();
+        this.promotionUi = new PromotionUi(new PromotionService(new ContractService()));
         this.ticketUi = new TicketUi(new TicketService(), new PartnerService());
         this.scanner = new Scanner(System.in);
     }

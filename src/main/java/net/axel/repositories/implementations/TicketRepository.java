@@ -1,4 +1,4 @@
-package net.axel.repositories;
+package net.axel.repositories.implementations;
 
 import net.axel.config.DatabaseConnection;
 import net.axel.models.entities.Contract;
@@ -8,13 +8,14 @@ import net.axel.models.enums.ContractStatus;
 import net.axel.models.enums.PartnerStatus;
 import net.axel.models.enums.TicketStatus;
 import net.axel.models.enums.TransportType;
+import net.axel.repositories.interfaces.ITicketRipository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class TicketRepository {
+public class TicketRepository implements ITicketRipository {
 
     private final String tableName = "tickets";
     private final Connection connection = DatabaseConnection.getInstance().getConnection();
@@ -22,7 +23,8 @@ public class TicketRepository {
     public TicketRepository() throws SQLException{
     }
 
-    public void addTicket(Ticket ticket) throws SQLException{
+    @Override
+    public void addTicket(Ticket ticket) {
         String query = "INSERT INTO " + tableName + " (id, transport_type, purchase_price, resell_price, sale_date, ticket_status, contract_id) " +
                 "VALUES(?, ?::TransportType, ?, ?, ?, ?::TicketStatus, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)){
@@ -35,11 +37,13 @@ public class TicketRepository {
             stmt.setObject(7, ticket.getContract().getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("Error adding a ticket" + e.getMessage());
         }
     }
 
-    public List<Ticket> getAllTickets() throws SQLException {
+    @Override
+    public List<Ticket> getAllTickets() {
         List<Ticket> tickets = new ArrayList<>();
         String query = "SELECT t.*, c.*, p.* FROM " + tableName + " t " +
                 "JOIN contract c ON t.contract_id = c.id " +
@@ -49,11 +53,16 @@ public class TicketRepository {
             while(resultSet.next()) {
                 tickets.add(mapToTicket(resultSet));
             }
+            return tickets;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error getting all tickets : " + e.getMessage());
+            return null;
         }
-        return tickets;
     }
 
-    public List<Ticket> getTicketsByPartner(UUID id) throws SQLException {
+    @Override
+    public List<Ticket> getTicketsByPartner(UUID id) {
         List<Ticket> partnerTickets = new ArrayList<>();
         String query = "SELECT t.*, c.*, p.* FROM " + tableName + " t " +
                 "JOIN contract c ON t.contract_id = c.id " +
@@ -64,8 +73,12 @@ public class TicketRepository {
             while(resultSet.next()) {
                 partnerTickets.add(mapToTicket(resultSet));
             }
+            return partnerTickets;
+        } catch(SQLException e ) {
+            e.printStackTrace();
+            System.err.println("Error get ticket by partner : " + e.getMessage());
+            return null;
         }
-        return partnerTickets;
     }
 
     private Ticket mapToTicket(ResultSet resultSet) throws SQLException {

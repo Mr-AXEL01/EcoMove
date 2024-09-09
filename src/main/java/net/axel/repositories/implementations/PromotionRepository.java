@@ -1,18 +1,18 @@
-package net.axel.repositories;
+package net.axel.repositories.implementations;
 
 import net.axel.config.DatabaseConnection;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Partner;
 import net.axel.models.entities.Promotion;
-import net.axel.models.entities.Ticket;
 import net.axel.models.enums.*;
+import net.axel.repositories.interfaces.IPromotionRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PromotionRepository {
+public class PromotionRepository implements IPromotionRepository {
 
     private final String tableName = "promotions";
     private final Connection connection = DatabaseConnection.getInstance().getConnection();
@@ -21,7 +21,8 @@ public class PromotionRepository {
 
     }
 
-    public void addPromotion(Promotion promotion) throws SQLException {
+    @Override
+    public void addPromotion(Promotion promotion) {
         String query = "INSERT INTO "+ tableName + " (id, offer_name, description, start_date, end_date, reduction_type, reduction_value, conditions, offer_status, contract_id)" +
                 "VALUES(?, ?, ?, ?, ?, ?::RductionType, ?, ?, ?::OfferStatus, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -37,25 +38,30 @@ public class PromotionRepository {
             stmt.setObject(10, promotion.getContract().getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("Error adding promotion"+ e.getMessage());
         }
     }
 
-    public Promotion getPromotionById(UUID id) throws SQLException {
+    @Override
+    public Promotion getPromotionById(UUID id) {
          String query = "SELECT * FROM " + tableName + " WHERE id = ?";
          try (PreparedStatement stmt = connection.prepareStatement(query)) {
              stmt.setObject(1, id);
              try(ResultSet resultSet = stmt.executeQuery()) {
                  if(resultSet.next()) {
                      return mapToPromotion(resultSet);
-                 }else {
-                     return null;
                  }
              }
+         } catch(SQLException e) {
+             e.printStackTrace();
+             System.err.println("Error getting promotion by ID : " + e.getMessage());
          }
+         return null;
     }
 
-    public List<Promotion> getAllPromotions() throws SQLException {
+    @Override
+    public List<Promotion> getAllPromotions() {
         List<Promotion> promotions = new ArrayList<>();
         String query = "SELECT o.*, c.*, p.* FROM " + tableName + " o " +
                 "JOIN contract c ON o.contract_id = c.id " +
@@ -65,11 +71,16 @@ public class PromotionRepository {
             while (resultSet.next()) {
                 promotions.add(mapToPromotion(resultSet));
             }
-        }
         return promotions;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error getting all promotions : " + e.getMessage());
+            return null;
+        }
     }
 
-    public void updatePromotion(Promotion promotion) throws SQLException {
+    @Override
+    public void updatePromotion(Promotion promotion) {
         String query = "UPDATE " + tableName + " SET offer_name = ?, description = ?, start_date = ?, end_date = ?, reduction_type = ?::ReductionType, "+
                 "reduction_value = ?, conditions = ?, offer_status = ?::OfferStatus, contract_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -83,14 +94,21 @@ public class PromotionRepository {
             stmt.setString(8, promotion.getOfferStatus().name());
             stmt.setObject(9, promotion.getContract().getId());
             stmt.executeUpdate();
+        } catch(SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error updating Promotion : " + e.getMessage());
         }
     }
 
-    public void deletePromotion(UUID id) throws SQLException {
+    @Override
+    public void deletePromotion(UUID id) {
         String query = "DELETE FROM " + tableName + " WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setObject(1, id);
             stmt.executeUpdate();
+        } catch(SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error deleting promotion : " + e.getMessage());
         }
     }
 

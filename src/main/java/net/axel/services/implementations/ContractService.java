@@ -3,7 +3,7 @@ package net.axel.services.implementations;
 import net.axel.models.dto.ContractDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Partner;
-import net.axel.repositories.ContractRepository;
+import net.axel.repositories.implementations.ContractRepository;
 import net.axel.services.interfaces.IContractService;
 
 import java.sql.SQLException;
@@ -25,57 +25,38 @@ public class ContractService implements IContractService {
     public boolean addContract(ContractDto dto) {
         final Date StartDate = dto.startDate();
         final Date endDate = dto.endDate();
-        try {
-            if(checkDates(StartDate, endDate)) {
-                final Partner partner = partnerService.getPartnerById(dto.partnerId());
-                final Contract contract = new Contract(UUID.randomUUID(), dto.startDate(), dto.endDate(), dto.specialTariff(), dto.conditionAccord(), dto.renewable(), dto.status(), partner);
-                contractRepository.addContract(contract);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error adding contract", e);
+        if(checkDates(StartDate, endDate)) {
+            final Partner partner = partnerService.getPartnerById(dto.partnerId());
+            final Contract contract = new Contract(UUID.randomUUID(), dto.startDate(), dto.endDate(), dto.specialTariff(), dto.conditionAccord(), dto.renewable(), dto.status(), partner);
+            contractRepository.addContract(contract);
+            return true;
+        } else {
+            return false;
         }
     }
 
     @Override
     public Contract getContractById(UUID id) {
-        try {
-            return contractRepository.getContractById(id);
-        } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving contract by id", e);
-        }
+        return contractRepository.getContractById(id);
+
     }
 
     @Override
     public List<Contract> getAllContracts() {
-        try {
-            return contractRepository.getAllContracts();
-        } catch (SQLException e) {
-//            e.printStackTrace();
-            throw new RuntimeException("Error retrieving all contracts", e);
-        }
+        return contractRepository.getAllContracts();
     }
 
     @Override
     public void updateContract(UUID contractId,ContractDto updateDto) {
-        try {
-            final Partner partner = partnerService.getPartnerById(updateDto.partnerId());
-            final Contract contract = new Contract(contractId, updateDto.startDate(), updateDto.endDate(), updateDto.specialTariff(), updateDto.conditionAccord(), updateDto.renewable(), updateDto.status(), partner);
-            contractRepository.updateContract(contract);
-        } catch (SQLException e) {
-            throw new RuntimeException("Eroor updating contract", e);
-        }
+        final Partner partner = partnerService.getPartnerById(updateDto.partnerId());
+        final Contract contract = new Contract(contractId, updateDto.startDate(), updateDto.endDate(), updateDto.specialTariff(), updateDto.conditionAccord(), updateDto.renewable(), updateDto.status(), partner);
+        contractRepository.updateContract(contract);
     }
 
     @Override
     public void deleteContract(UUID id) {
-        try {
-            contractRepository.deleteContract(id);
-        } catch ( SQLException e) {
-            throw new RuntimeException("Error deleting contract", e);
-        }
+        contractRepository.deleteContract(id);
+
     }
 
     private boolean checkDates(Date startDate, Date endDate) {

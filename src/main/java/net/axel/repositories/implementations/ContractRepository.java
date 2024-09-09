@@ -1,4 +1,4 @@
-package net.axel.repositories;
+package net.axel.repositories.implementations;
 
 import net.axel.config.DatabaseConnection;
 import net.axel.models.entities.Contract;
@@ -6,13 +6,14 @@ import net.axel.models.entities.Partner;
 import net.axel.models.enums.ContractStatus;
 import net.axel.models.enums.PartnerStatus;
 import net.axel.models.enums.TransportType;
+import net.axel.repositories.interfaces.IContractRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ContractRepository {
+public class ContractRepository implements IContractRepository {
 
     private final String tableName = "contracts";
     private final Connection connection = DatabaseConnection.getInstance().getConnection();
@@ -20,7 +21,8 @@ public class ContractRepository {
     public ContractRepository() throws SQLException {
     }
 
-    public void addContract(Contract contract) throws  SQLException{
+    @Override
+    public void addContract(Contract contract) {
         String query = "INSERT INTO " + tableName + " (id, start_date, end_date, special_tariff, conditions_accord, renewable, contract_status, partner_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?::ContractStatus, ?)";
         try(PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -33,10 +35,13 @@ public class ContractRepository {
             stmt.setString(7, contract.getContractStatus().name());
             stmt.setObject(8, contract.getPartner().getId());
             stmt.executeUpdate();
+        } catch(SQLException e) {
+            System.err.println("Error adding a Contract : " + e.getMessage());
         }
     }
 
-    public Contract getContractById(UUID id) throws SQLException {
+    @Override
+    public Contract getContractById(UUID id) {
         String query = "SELECT c.*, p.* FROM " + tableName + " c " +
                 "JOIN partner p ON c.partner_id = p.id " +
                 "WHERE c.id = ?";
@@ -47,11 +52,15 @@ public class ContractRepository {
                     return mapToContract(resultSet);
                 }
             }
+        } catch(SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error getting Contract by ID : " + e.getMessage());
         }
         return null;
     }
 
-    public List<Contract> getAllContracts() throws SQLException {
+    @Override
+    public List<Contract> getAllContracts() {
         List<Contract> contracts = new ArrayList<>();
         String query = "SELECT c.* , p.* FROM " + tableName + " c JOIN partner p ON c.partner_id = p.id";
         try(Statement stmt = connection.createStatement()) {
@@ -59,11 +68,16 @@ public class ContractRepository {
             while (resultSet.next()) {
                 contracts.add(mapToContract(resultSet));
             }
-        }
         return contracts;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error getting all contract : " + e.getMessage());
+            return null;
+        }
     }
 
-    public void updateContract(Contract contract) throws SQLException {
+    @Override
+    public void updateContract(Contract contract) {
         String query = "UPDATE " + tableName + " SET start_date = ?, end_date = ?, special_tariff = ?, conditions_accord = ?, renewable = ?, contract_status = ?::ContractStatus, partner_id = ? WHERE id = ?";
         try(PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setDate(1, new Date(contract.getStartDate().getTime()));
@@ -75,14 +89,21 @@ public class ContractRepository {
             stmt.setObject(7, contract.getPartner().getId());
             stmt.setObject(8, contract.getId());
             stmt.executeUpdate();
+        } catch(SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error updating contract : " + e.getMessage());
         }
     }
 
-    public void deleteContract(UUID id) throws SQLException {
+    @Override
+    public void deleteContract(UUID id) {
         String query = "DELETE FROM " + tableName + " WHERE id = ?";
         try(PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setObject(1, id);
             stmt.executeUpdate();
+        } catch(SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error deleting a contract : " + e.getMessage());
         }
     }
 
