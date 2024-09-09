@@ -1,4 +1,4 @@
-package net.axel.services;
+package net.axel.services.implementations;
 
 import net.axel.models.entities.Partner;
 import net.axel.repositories.PartnerRepository;

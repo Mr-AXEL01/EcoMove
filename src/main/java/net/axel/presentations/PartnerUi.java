@@ -3,7 +3,7 @@ package net.axel.presentations;
 import net.axel.models.entities.Partner;
 import net.axel.models.enums.PartnerStatus;
 import net.axel.models.enums.TransportType;
-import net.axel.services.PartnerService;
+import net.axel.services.interfaces.IPartnerService;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -13,11 +13,11 @@ import java.util.UUID;
 
 public class PartnerUi {
 
-    private final PartnerService partnerService;
+    private final IPartnerService partnerService;
     private final Scanner scanner;
 
-    public PartnerUi() throws SQLException {
-        this.partnerService = new PartnerService();
+    public PartnerUi(IPartnerService partnerService) throws SQLException {
+        this.partnerService = partnerService;
         this.scanner = new Scanner(System.in);
     }
 
