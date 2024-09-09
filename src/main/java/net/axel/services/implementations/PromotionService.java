@@ -1,4 +1,4 @@
-package net.axel.services;
+package net.axel.services.implementations;
 
 import net.axel.models.dto.PromotionDto;
 import net.axel.models.entities.Contract;

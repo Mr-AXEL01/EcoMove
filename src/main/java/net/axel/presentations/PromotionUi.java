@@ -4,7 +4,7 @@ import net.axel.models.dto.PromotionDto;
 import net.axel.models.entities.Promotion;
 import net.axel.models.enums.OfferStatus;
 import net.axel.models.enums.ReductionType;
-import net.axel.services.PromotionService;
+import net.axel.services.interfaces.IPromotionService;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -14,11 +14,11 @@ import java.util.UUID;
 
 public class PromotionUi {
 
-    private final PromotionService promotionService;
+    private final IPromotionService promotionService;
     private final Scanner scanner;
 
-    public PromotionUi() throws SQLException {
-        this.promotionService = new PromotionService();
+    public PromotionUi(IPromotionService promotionService) throws SQLException {
+        this.promotionService = promotionService;
         this.scanner = new Scanner(System.in);
     }
 
