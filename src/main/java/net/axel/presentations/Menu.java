@@ -1,5 +1,10 @@
 package net.axel.presentations;
 
+import net.axel.models.entities.Partner;
+import net.axel.models.entities.Ticket;
+import net.axel.services.PartnerService;
+import net.axel.services.TicketService;
+
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -15,7 +20,7 @@ public class Menu {
         this.partnerUi = new PartnerUi();
         this.contractUi = new ContractUi();
         this.promotionUi = new PromotionUi();
-        this.ticketUi = new TicketUi();
+        this.ticketUi = new TicketUi(new TicketService(), new PartnerService());
         this.scanner = new Scanner(System.in);
     }
 
