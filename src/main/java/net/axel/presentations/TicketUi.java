@@ -5,8 +5,8 @@ import net.axel.models.entities.Partner;
 import net.axel.models.entities.Ticket;
 import net.axel.models.enums.TicketStatus;
 import net.axel.models.enums.TransportType;
-import net.axel.services.PartnerService;
-import net.axel.services.TicketService;
+import net.axel.services.interfaces.IPartnerService;
+import net.axel.services.interfaces.ITicketService;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -16,13 +16,13 @@ import java.util.UUID;
 
 public class TicketUi {
 
-    private final TicketService ticketService;
-    private final PartnerService partnerService;
+    private final ITicketService ticketService;
+    private final IPartnerService partnerService;
     private final Scanner scanner;
 
-    public TicketUi() throws SQLException {
-        this.ticketService = new TicketService();
-        this.partnerService = new PartnerService();
+    public TicketUi(ITicketService ticketService, IPartnerService partnerService) throws SQLException {
+        this.ticketService = ticketService;
+        this.partnerService = partnerService;
         this.scanner = new Scanner(System.in);
     }
 
