@@ -5,12 +5,13 @@ import net.axel.models.entities.Contract;
 import net.axel.models.entities.Ticket;
 import net.axel.models.enums.ContractStatus;
 import net.axel.repositories.TicketRepository;
+import net.axel.services.interfaces.ITicketService;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public class TicketService {
+public class TicketService implements ITicketService {
 
     private final TicketRepository ticketRepository;
     private final ContractService contractService;
@@ -19,6 +20,7 @@ public class TicketService {
         this.ticketRepository = new TicketRepository();
         this.contractService = new ContractService();
     }
+    
     public boolean addTicket(TicketDto dto) {
         final Contract contract = contractService.getContractById(dto.ContractId());
         final double purchasePrice = dto.purchasePrice();
