@@ -1,7 +1,6 @@
 package net.axel.services.implementations;
 
 import net.axel.models.entities.Partner;
-import net.axel.repositories.implementations.PartnerRepository;
 import net.axel.repositories.interfaces.IPartnerRepository;
 import net.axel.services.interfaces.IPartnerService;
 
