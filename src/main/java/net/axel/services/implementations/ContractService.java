@@ -4,7 +4,9 @@ import net.axel.models.dto.ContractDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Partner;
 import net.axel.repositories.implementations.ContractRepository;
+import net.axel.repositories.interfaces.IContractRepository;
 import net.axel.services.interfaces.IContractService;
+import net.axel.services.interfaces.IPartnerService;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -13,12 +15,12 @@ import java.util.UUID;
 
 public class ContractService implements IContractService {
 
-    private final ContractRepository contractRepository;
-    private final PartnerService partnerService;
+    private final IContractRepository contractRepository;
+    private final IPartnerService partnerService;
 
-    public ContractService() throws SQLException {
-        this.contractRepository = new ContractRepository();
-        this.partnerService = new PartnerService();
+    public ContractService(ContractRepository contractRepository ,PartnerService partnerService) throws SQLException {
+        this.contractRepository = contractRepository;
+        this.partnerService = partnerService;
     }
 
     @Override

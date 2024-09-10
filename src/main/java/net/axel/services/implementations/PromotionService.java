@@ -4,6 +4,7 @@ import net.axel.models.dto.PromotionDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Promotion;
 import net.axel.repositories.implementations.PromotionRepository;
+import net.axel.repositories.interfaces.IPromotionRepository;
 import net.axel.services.interfaces.IContractService;
 import net.axel.services.interfaces.IPromotionService;
 
@@ -13,11 +14,11 @@ import java.util.UUID;
 
 public class PromotionService implements IPromotionService {
 
-    private final PromotionRepository promotionRepository;
+    private final IPromotionRepository promotionRepository;
     private final IContractService contractService;
 
-    public PromotionService(IContractService contractService) throws SQLException {
-        this.promotionRepository = new PromotionRepository();
+    public PromotionService(PromotionRepository promotionRepository ,IContractService contractService) throws SQLException {
+        this.promotionRepository = promotionRepository;
         this.contractService = contractService;
     }
 

@@ -3,7 +3,10 @@ package net.axel.presentations;
 import net.axel.models.dto.ContractDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.enums.ContractStatus;
+import net.axel.repositories.implementations.ContractRepository;
+import net.axel.repositories.implementations.PartnerRepository;
 import net.axel.services.implementations.ContractService;
+import net.axel.services.implementations.PartnerService;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -20,7 +23,7 @@ public class ContractUi {
     private final SimpleDateFormat dateFormat;
 
     public ContractUi() throws SQLException {
-        this.contractService = new ContractService();
+        this.contractService = new ContractService(new ContractRepository(), new PartnerService(new PartnerRepository()));
         this.scanner = new Scanner(System.in);
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     }

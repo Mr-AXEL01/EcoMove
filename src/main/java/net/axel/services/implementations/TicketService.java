@@ -5,6 +5,8 @@ import net.axel.models.entities.Contract;
 import net.axel.models.entities.Ticket;
 import net.axel.models.enums.ContractStatus;
 import net.axel.repositories.implementations.TicketRepository;
+import net.axel.repositories.interfaces.ITicketRipository;
+import net.axel.services.interfaces.IContractService;
 import net.axel.services.interfaces.ITicketService;
 
 import java.sql.SQLException;
@@ -13,12 +15,12 @@ import java.util.UUID;
 
 public class TicketService implements ITicketService {
 
-    private final TicketRepository ticketRepository;
-    private final ContractService contractService;
+    private final ITicketRipository ticketRepository;
+    private final IContractService contractService;
 
-    public TicketService() throws SQLException {
-        this.ticketRepository = new TicketRepository();
-        this.contractService = new ContractService();
+    public TicketService(TicketRepository ticketRepository ,ContractService contractService) throws SQLException {
+        this.ticketRepository = ticketRepository;
+        this.contractService = contractService;
     }
 
     @Override
