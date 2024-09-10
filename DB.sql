@@ -53,6 +53,13 @@ CREATE TABLE IF NOT EXISTS Promotions (
     FOREIGN KEY (contract_id) REFERENCES Contracts(id)
 );
 
+CREATE TABLE IF NOT EXISTS Stations (
+    id UUID PRIMARY KEY ,
+    start_station VARCHAR(255) NOT NULL,
+    end_station VARCHAR(255) NOT NULL,
+    start_date TIMESTAMP NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS Tickets (
     id UUID PRIMARY KEY,
     transport_type TransportType NOT NULL,
@@ -61,6 +68,8 @@ CREATE TABLE IF NOT EXISTS Tickets (
     sale_date TIMESTAMP,
     ticket_status TicketStatus NOT NULL,
     contract_id UUID,
-    FOREIGN KEY (contract_id) REFERENCES Contracts(id)
+    station_id UUID,
+    FOREIGN KEY (contract_id) REFERENCES Contracts(id),
+    FOREIGN KEY (station_id) REFERENCES Stations(id)
 );
 
