@@ -5,7 +5,6 @@ import net.axel.repositories.implementations.PartnerRepository;
 import net.axel.repositories.interfaces.IPartnerRepository;
 import net.axel.services.interfaces.IPartnerService;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,7 +12,7 @@ public class PartnerService implements IPartnerService {
 
     private final IPartnerRepository partnerRepository;
 
-    public PartnerService(IPartnerRepository partnerRepository) throws SQLException {
+    public PartnerService(IPartnerRepository partnerRepository) {
         this.partnerRepository = partnerRepository;
     }
 
