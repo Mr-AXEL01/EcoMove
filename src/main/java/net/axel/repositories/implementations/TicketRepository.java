@@ -3,6 +3,7 @@ package net.axel.repositories.implementations;
 import net.axel.config.DatabaseConnection;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Partner;
+import net.axel.models.entities.Station;
 import net.axel.models.entities.Ticket;
 import net.axel.models.enums.ContractStatus;
 import net.axel.models.enums.PartnerStatus;
@@ -25,8 +26,8 @@ public class TicketRepository implements ITicketRipository {
 
     @Override
     public void addTicket(Ticket ticket) {
-        String query = "INSERT INTO " + tableName + " (id, transport_type, purchase_price, resell_price, sale_date, ticket_status, contract_id) " +
-                "VALUES(?, ?::TransportType, ?, ?, ?, ?::TicketStatus, ?)";
+        String query = "INSERT INTO " + tableName + " (id, transport_type, purchase_price, resell_price, sale_date, ticket_status, contract_id, station_id) " +
+                "VALUES(?, ?::TransportType, ?, ?, ?, ?::TicketStatus, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)){
             stmt.setObject(1, ticket.getId());
             stmt.setString(2, ticket.getTransportType().name());
@@ -35,6 +36,7 @@ public class TicketRepository implements ITicketRipository {
             stmt.setDate(5, new Date(ticket.getSaleDate().getTime()));
             stmt.setString(6, ticket.getTicketStatus().name());
             stmt.setObject(7, ticket.getContract().getId());
+            stmt.setObject(8, ticket.getStation().getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,11 +47,12 @@ public class TicketRepository implements ITicketRipository {
     @Override
     public List<Ticket> getAllTickets() {
         List<Ticket> tickets = new ArrayList<>();
-        String query = "SELECT t.*, c.*, p.* FROM " + tableName + " t " +
-                "JOIN contract c ON t.contract_id = c.id " +
-                "JOIN partner p ON c.partner_id = p.id";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            ResultSet resultSet = stmt.executeQuery();
+        String query = "SELECT t.*, s.*, c.*, p.* FROM " + tableName + " t " +
+                "JOIN stations s ON t.station_id = s.id" +
+                "JOIN contracts c ON t.contract_id = c.id " +
+                "JOIN partners p ON c.partner_id = p.id";
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet resultSet = stmt.executeQuery(query);
             while(resultSet.next()) {
                 tickets.add(mapToTicket(resultSet));
             }
@@ -64,7 +67,8 @@ public class TicketRepository implements ITicketRipository {
     @Override
     public List<Ticket> getTicketsByPartner(UUID id) {
         List<Ticket> partnerTickets = new ArrayList<>();
-        String query = "SELECT t.*, c.*, p.* FROM " + tableName + " t " +
+        String query = "SELECT t.*, s.*, c.*, p.* FROM " + tableName + " t " +
+                "JOIN stations s ON t.station_id = s.id" +
                 "JOIN contract c ON t.contract_id = c.id " +
                 "JOIN partner p ON c.partner_id = p.id WHERE p.id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -89,6 +93,11 @@ public class TicketRepository implements ITicketRipository {
         Date saleDate = resultSet.getDate("sale_date");
         TicketStatus ticketStatus = TicketStatus.valueOf(resultSet.getString("ticket_status"));
 
+        UUID stationId = UUID.fromString(resultSet.getString(("station_id")));
+        String startStation = resultSet.getString("start_date");
+        String endStation = resultSet.getString("end_date");
+        Date stationStartDate = resultSet.getDate("start_date");
+
         UUID contractId = UUID.fromString(resultSet.getString("contract_id"));
         Date startDate = resultSet.getDate("start_date");
         Date endDate = resultSet.getDate("end_date");
@@ -106,10 +115,12 @@ public class TicketRepository implements ITicketRipository {
         PartnerStatus partnerStatus = PartnerStatus.valueOf(resultSet.getString("partner_status"));
         Date creationDate = resultSet.getDate("creation_date");
 
+        Station station = new Station(stationId, startStation, endStation, stationStartDate.toLocalDate());
+
         Partner partner = new Partner(partnerId, companyName, comercialContact, partnerTransportType, geographicalArea, specialConditions, partnerStatus, creationDate);
 
         Contract contract = new Contract(contractId, startDate, endDate, specialTariff, conditionsAccord, renewable, contractStatus, partner);
 
-        return new Ticket(ticketId, transportType, purchasePrice, resellPrice, saleDate, ticketStatus, contract);
+        return new Ticket(ticketId, transportType, purchasePrice, resellPrice, saleDate, ticketStatus, contract, station);
     }
 }

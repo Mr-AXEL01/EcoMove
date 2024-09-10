@@ -12,7 +12,8 @@ public record TicketDto (
         Double resellPrice,
         Date saleDate,
         TicketStatus ticketStatus,
-        UUID ContractId
+        UUID ContractId,
+        UUID StationId
 ) {
 
 }

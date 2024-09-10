@@ -88,43 +88,71 @@ public class TicketUi {
     }
 
     private void addNewTicket() {
-        System.out.print("Enter transport type (PLANE, TRAIN, BUS): ");
+        System.out.print("Enter transport type (PLANE, TRAIN, BUS, TAXI): ");
         String transportTypeStr = scanner.nextLine();
         if(transportTypeStr.trim().isEmpty()) {
             System.out.println("Transport type is empty.");
             return;
         }
-        TransportType transportType = TransportType.valueOf(transportTypeStr.toUpperCase());
+        TransportType transportType;
+        try {
+            transportType = TransportType.valueOf(transportTypeStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid transport type. Please enter PLANE, TRAIN, BUS, TAXI.");
+            return;
+        }
 
         System.out.print("Enter purchase price: ");
         String purchasePriceStr = scanner.nextLine();
-        if(purchasePriceStr.trim().isEmpty()) {
+        if (purchasePriceStr.trim().isEmpty()) {
             System.out.println("Purchase price is empty.");
             return;
         }
-        double purchasePrice = Double.parseDouble(purchasePriceStr);
+        double purchasePrice;
+        try {
+            purchasePrice = Double.parseDouble(purchasePriceStr);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid purchase price. Please enter a valid number.");
+            return;
+        }
 
         System.out.print("Enter resell price: ");
         String resellPriceStr = scanner.nextLine();
-        if(resellPriceStr.trim().isEmpty()) {
+        if (resellPriceStr.trim().isEmpty()) {
             System.out.println("Resell price is empty.");
             return;
         }
-        double resellPrice = Double.parseDouble(resellPriceStr);
-
-//        scanner.nextLine();
+        double resellPrice;
+        try {
+            resellPrice = Double.parseDouble(resellPriceStr);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid resell price. Please enter a valid number.");
+            return;
+        }
 
         System.out.print("Enter sale date (YYYY-MM-DD): ");
         String saleDateStr = scanner.nextLine();
-        if(saleDateStr.trim().isEmpty()) {
+        if (saleDateStr.trim().isEmpty()) {
             System.out.println("The sale date is empty.");
             return;
         }
-        Date saleDate = Date.valueOf(saleDateStr);
+        Date saleDate;
+        try {
+            saleDate = Date.valueOf(saleDateStr);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+            return;
+        }
 
         System.out.print("Enter ticket status (SOLD, PENDING, CANCELLED): ");
         String ticketStatusStr = scanner.nextLine();
-        TicketStatus ticketStatus = TicketStatus.valueOf(ticketStatusStr.toUpperCase());
+        TicketStatus ticketStatus;
+        try {
+            ticketStatus = TicketStatus.valueOf(ticketStatusStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid ticket status. Please enter SOLD, PENDING, or CANCELLED.");
+            return;
+        }
 
         System.out.print("Enter contract ID: ");
         String contractIdStr = scanner.nextLine();
@@ -132,7 +160,27 @@ public class TicketUi {
             System.out.println("The contract ID is empty.");
             return;
         }
-        UUID contractId = UUID.fromString(contractIdStr);
+        UUID contractId;
+        try {
+            contractId = UUID.fromString(contractIdStr);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid contract ID format.");
+            return;
+        }
+
+        System.out.print("Enter station ID: ");
+        String stationIdStr = scanner.nextLine();
+        if (stationIdStr.trim().isEmpty()) {
+            System.out.println("The station ID is empty.");
+            return;
+        }
+        UUID stationId;
+        try {
+            stationId = UUID.fromString(stationIdStr);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid station ID format.");
+            return;
+        }
 
         final TicketDto dto = new TicketDto(
                 transportType,
@@ -140,9 +188,15 @@ public class TicketUi {
                 resellPrice,
                 saleDate,
                 ticketStatus,
-                contractId
+                contractId,
+                stationId
         );
-        if(ticketService.addTicket(dto)) System.out.println("Ticket added successfully.\n");
+
+        if (ticketService.addTicket(dto)) {
+            System.out.println("Ticket added successfully.\n");
+        } else {
+            System.out.println("Error adding the ticket.\n");
+        }
     }
 
 }
