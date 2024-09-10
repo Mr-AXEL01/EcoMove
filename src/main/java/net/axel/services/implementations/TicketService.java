@@ -1,24 +1,29 @@
-package net.axel.services;
+package net.axel.services.implementations;
 
 import net.axel.models.dto.TicketDto;
 import net.axel.models.entities.Contract;
 import net.axel.models.entities.Ticket;
 import net.axel.models.enums.ContractStatus;
-import net.axel.repositories.TicketRepository;
+import net.axel.repositories.implementations.TicketRepository;
+import net.axel.repositories.interfaces.ITicketRipository;
+import net.axel.services.interfaces.IContractService;
+import net.axel.services.interfaces.ITicketService;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public class TicketService {
+public class TicketService implements ITicketService {
 
-    private final TicketRepository ticketRepository;
-    private final ContractService contractService;
+    private final ITicketRipository ticketRepository;
+    private final IContractService contractService;
 
-    public TicketService() throws SQLException {
-        this.ticketRepository = new TicketRepository();
-        this.contractService = new ContractService();
+    public TicketService(TicketRepository ticketRepository ,ContractService contractService) throws SQLException {
+        this.ticketRepository = ticketRepository;
+        this.contractService = contractService;
     }
+
+    @Override
     public boolean addTicket(TicketDto dto) {
         final Contract contract = contractService.getContractById(dto.ContractId());
         final double purchasePrice = dto.purchasePrice();
@@ -26,32 +31,20 @@ public class TicketService {
         if(!checkContractStatus(contract) || checkPrices(purchasePrice, resellPrice)){
             return false;
         } else {
-            try {
-                final Ticket ticket = new Ticket(UUID.randomUUID(), dto.transportType(), dto.purchasePrice(), dto.resellPrice(), dto.saleDate(), dto.ticketStatus(), contract);
-                ticketRepository.addTicket(ticket);
-            } catch (SQLException e) {
-                System.err.println("Error adding ticket: " + e.getMessage());
-            }
+            final Ticket ticket = new Ticket(UUID.randomUUID(), dto.transportType(), dto.purchasePrice(), dto.resellPrice(), dto.saleDate(), dto.ticketStatus(), contract);
+            ticketRepository.addTicket(ticket);
             return true;
         }
     }
 
+    @Override
     public List<Ticket> getAllTickets() {
-        try {
-            return ticketRepository.getAllTickets();
-        } catch (SQLException e) {
-            System.err.println("Error retrieving all tickets: " + e.getMessage());
-            return null;
-        }
+        return ticketRepository.getAllTickets();
     }
 
+    @Override
     public List<Ticket> getTicketsByPartner(UUID partnerId) {
-        try {
-            return ticketRepository.getTicketsByPartner(partnerId);
-        } catch (SQLException e) {
-            System.err.println("Error retrieving tickets for partner: " + e.getMessage());
-            return null;
-        }
+        return ticketRepository.getTicketsByPartner(partnerId);
     }
 
     private boolean checkContractStatus(Contract contract) {

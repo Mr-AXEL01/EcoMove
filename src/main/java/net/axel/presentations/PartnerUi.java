@@ -3,7 +3,7 @@ package net.axel.presentations;
 import net.axel.models.entities.Partner;
 import net.axel.models.enums.PartnerStatus;
 import net.axel.models.enums.TransportType;
-import net.axel.services.PartnerService;
+import net.axel.services.interfaces.IPartnerService;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -13,11 +13,11 @@ import java.util.UUID;
 
 public class PartnerUi {
 
-    private final PartnerService partnerService;
+    private final IPartnerService partnerService;
     private final Scanner scanner;
 
-    public PartnerUi() throws SQLException {
-        this.partnerService = new PartnerService();
+    public PartnerUi(IPartnerService partnerService) throws SQLException {
+        this.partnerService = partnerService;
         this.scanner = new Scanner(System.in);
     }
 
@@ -96,72 +96,65 @@ public class PartnerUi {
     }
 
     private void addNewPartner() {
-        try {
-            System.out.print("\nEnter Company Name: ");
-            String companyName = scanner.nextLine();
-            if (companyName.trim().isEmpty()) {
-                System.out.println("Company Name cannot be empty.");
-                return;
-            }
-
-            System.out.print("Enter Comercial Contact: ");
-            String comercialContact = scanner.nextLine();
-            if (comercialContact.trim().isEmpty()) {
-                System.out.println("Comercial Contact cannot be empty.");
-                return;
-            }
-
-            System.out.print("Enter Transport Type (PLANE, TRAIN, BUS, TAXI): ");
-            String transportTypeStr = scanner.nextLine();
-            if (transportTypeStr.trim().isEmpty()) {
-                System.out.println("Transport Type cannot be empty.");
-                return;
-            }
-
-            TransportType transportType;
-            try {
-                transportType = TransportType.valueOf(transportTypeStr.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                System.out.println("Invalid Transport Type. Please enter PLANE, TRAIN, BUS, or TAXI.");
-                return;
-            }
-
-            System.out.print("Enter Geographical Area: ");
-            String geographicalArea = scanner.nextLine();
-            if (geographicalArea.trim().isEmpty()) {
-                System.out.println("Geographical Area cannot be empty.");
-                return;
-            }
-
-            System.out.print("Enter Special Conditions: ");
-            String specialConditions = scanner.nextLine();
-            if (specialConditions.trim().isEmpty()) {
-                System.out.println("Special Conditions cannot be empty.");
-                return;
-            }
-
-            System.out.print("Enter Partner Status (ACTIVE, INACTIVE, SUSPENDED): ");
-            String partnerStatusStr = scanner.nextLine();
-            if (partnerStatusStr.trim().isEmpty()) {
-                System.out.println("Partner Status cannot be empty.");
-                return;
-            }
-
-            PartnerStatus partnerStatus;
-            try {
-                partnerStatus = PartnerStatus.valueOf(partnerStatusStr.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                System.out.println("Invalid Partner Status. Please enter ACTIVE, INACTIVE, or SUSPENDED.");
-                return;
-            }
-
-            Partner newPartner = new Partner(UUID.randomUUID(), companyName, comercialContact, transportType, geographicalArea, specialConditions, partnerStatus);
-            partnerService.addPartner(newPartner);
-            System.out.println("Partner added successfully!");
-
-        } catch (Exception e) {
-            System.out.println("Error adding partner: " + e.getMessage());
+        System.out.print("\nEnter Company Name: ");
+        String companyName = scanner.nextLine();
+        if (companyName.trim().isEmpty()) {
+            System.out.println("Company Name cannot be empty.");
+            return;
         }
+
+        System.out.print("Enter Comercial Contact: ");
+        String comercialContact = scanner.nextLine();
+        if (comercialContact.trim().isEmpty()) {
+            System.out.println("Comercial Contact cannot be empty.");
+            return;
+        }
+
+        System.out.print("Enter Transport Type (PLANE, TRAIN, BUS, TAXI): ");
+        String transportTypeStr = scanner.nextLine();
+        if (transportTypeStr.trim().isEmpty()) {
+            System.out.println("Transport Type cannot be empty.");
+            return;
+        }
+        TransportType transportType;
+        try {
+            transportType = TransportType.valueOf(transportTypeStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid Transport Type. Please enter PLANE, TRAIN, BUS, or TAXI.");
+            return;
+        }
+
+        System.out.print("Enter Geographical Area: ");
+        String geographicalArea = scanner.nextLine();
+        if (geographicalArea.trim().isEmpty()) {
+            System.out.println("Geographical Area cannot be empty.");
+            return;
+        }
+
+        System.out.print("Enter Special Conditions: ");
+        String specialConditions = scanner.nextLine();
+        if (specialConditions.trim().isEmpty()) {
+            System.out.println("Special Conditions cannot be empty.");
+            return;
+        }
+
+        System.out.print("Enter Partner Status (ACTIVE, INACTIVE, SUSPENDED): ");
+        String partnerStatusStr = scanner.nextLine();
+        if (partnerStatusStr.trim().isEmpty()) {
+            System.out.println("Partner Status cannot be empty.");
+            return;
+        }
+        PartnerStatus partnerStatus;
+        try {
+            partnerStatus = PartnerStatus.valueOf(partnerStatusStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid Partner Status. Please enter ACTIVE, INACTIVE, or SUSPENDED.");
+            return;
+        }
+
+        Partner newPartner = new Partner(UUID.randomUUID(), companyName, comercialContact, transportType, geographicalArea, specialConditions, partnerStatus);
+        partnerService.addPartner(newPartner);
+        System.out.println("Partner added successfully!");
     }
 
     private void updatePartner() {
