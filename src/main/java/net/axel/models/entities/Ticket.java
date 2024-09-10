@@ -14,8 +14,9 @@ public class Ticket {
     private Date saleDate;
     private TicketStatus ticketStatus;
     private Contract contract;
+    private Station station;
 
-    public Ticket(UUID id, TransportType transportType, Double purchasePrice, Double resellPrice, Date saleDate, TicketStatus ticketStatus, Contract contract) {
+    public Ticket(UUID id, TransportType transportType, Double purchasePrice, Double resellPrice, Date saleDate, TicketStatus ticketStatus, Contract contract, Station station) {
         this.id = id;
         this.transportType = transportType;
         this.purchasePrice = purchasePrice;
@@ -23,6 +24,7 @@ public class Ticket {
         this.saleDate = saleDate;
         this.ticketStatus = ticketStatus;
         this.contract = contract;
+        this.station= station;
     }
 
     public UUID getId() {
@@ -79,5 +81,13 @@ public class Ticket {
 
     public void setContract(Contract contract) {
         this.contract = contract;
+    }
+
+    public Station getStation() {
+        return station;
+    }
+
+    public void setStation(Station station) {
+        this.station = station;
     }
 }
