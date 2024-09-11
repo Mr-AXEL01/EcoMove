@@ -12,6 +12,7 @@
  CREATE TYPE contractStatus AS ENUM ('IN_PROGRESS', 'COMPLETE', 'SUSPENDED');
  CREATE TYPE reductionType AS ENUM ('FIXED_AMOUNT', 'PERCENTAGE');
  CREATE TYPE offerStatus AS ENUM ('ACTIVE', 'EXPIRED', 'SUSPENDED');
+ CREATE TYPE bookingStatus AS ENUM ('CONFIRMED', 'PENDING', 'CANCELLED');
 
 
 -- create tables
@@ -55,9 +56,16 @@ CREATE TABLE IF NOT EXISTS Promotions (
 
 CREATE TABLE IF NOT EXISTS Stations (
     id UUID PRIMARY KEY ,
-    start_station VARCHAR(255) NOT NULL,
-    end_station VARCHAR(255) NOT NULL,
-    start_date TIMESTAMP NOT NULL
+    name VARCHAR(255) NOT NULL,
+    location VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS journeys(
+    id UUID PRIMARY KEY,
+    start_station UUID,
+    end_station UUID,
+    FOREIGN KEY (start_station) REFERENCES stations(id),
+    FOREIGN KEY (end_station) REFERENCES stations(id)
 );
 
 CREATE TABLE IF NOT EXISTS Tickets (
@@ -68,8 +76,33 @@ CREATE TABLE IF NOT EXISTS Tickets (
     sale_date TIMESTAMP,
     ticket_status TicketStatus NOT NULL,
     contract_id UUID,
-    station_id UUID,
+    journey_id UUID,
     FOREIGN KEY (contract_id) REFERENCES Contracts(id),
-    FOREIGN KEY (station_id) REFERENCES Stations(id)
+    FOREIGN KEY (journey_id) REFERENCES journeys(id)
 );
 
+CREATE TABLE IF NOT EXISTS Clients (
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(255),
+
+    PRIMARY KEY (email)
+);
+
+CREATE TABLE IF NOT EXISTS Bookings (
+    id UUID PRIMARY KEY,
+    booking_status BookingStatus NOT NULL,
+    client_email UUID,
+    FOREIGN KEY (client_email) REFERENCES Clients(email)
+);
+
+CREATE TABLE IF NOT EXISTS Favorites (
+    id UUID PRIMARY KEY,
+    start_station VARCHAR(255) NOT NULL,
+    end_station VARCHAR(255) NOT NULL,
+    departure_time TIMESTAMP NOT NULL,
+    transport_type TransportType,
+    client_email UUID,
+    FOREIGN KEY (client_email) REFERENCES Clients(email)
+);
