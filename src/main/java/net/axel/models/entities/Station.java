@@ -1,21 +1,16 @@
 package net.axel.models.entities;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 public class Station {
     private UUID id;
-    private String startStation;
-    private String endStation;
-    private LocalDate startDate;
-    private List<Ticket> tickets;
+    private String name;
+    private String location;
 
-    public Station(UUID id, String startStation, String endStation, LocalDate startDate) {
+    public Station(UUID id, String name, String location) {
         this.id = id;
-        this.startStation = startStation;
-        this.endStation = endStation;
-        this.startDate = startDate;
+        this.name = name;
+        this.location = location;
     }
 
     public UUID getId() {
@@ -26,35 +21,19 @@ public class Station {
         this.id = id;
     }
 
-    public String getStartStation() {
-        return startStation;
+    public String getName() {
+        return name;
     }
 
-    public void setStartStation(String startStation) {
-        this.startStation = startStation;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getEndStation() {
-        return endStation;
+    public String getLocation() {
+        return location;
     }
 
-    public void setEndStation(String endStation) {
-        this.endStation = endStation;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public List<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<Ticket> tickets) {
-        this.tickets = tickets;
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

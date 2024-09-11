@@ -4,7 +4,6 @@ import net.axel.models.entities.Station;
 import net.axel.services.implementations.StationService;
 import net.axel.services.interfaces.IStationService;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -48,42 +47,28 @@ public class StationUi {
     public void addStation() {
         System.out.println("\n--- Add New Station ---");
 
-        System.out.print("Start Station: ");
-        String startStation = scanner.nextLine();
-        if (startStation.trim().isEmpty()) {
-            System.out.println("Start Station cannot be empty.");
+        System.out.print("Station Name: ");
+        String name = scanner.nextLine();
+        if (name.trim().isEmpty()) {
+            System.out.println("Station Name cannot be empty.");
             return;
         }
 
-        System.out.print("End Station: ");
-        String endStation = scanner.nextLine();
-        if (endStation.trim().isEmpty()) {
-            System.out.println("End Station cannot be empty.");
+        System.out.print("Station Location: ");
+        String location = scanner.nextLine();
+        if (location.trim().isEmpty()) {
+            System.out.println("Station Location cannot be empty.");
             return;
         }
 
-        System.out.print("Start Date (YYYY-MM-DD): ");
-        String startDateInput = scanner.nextLine();
-        if (startDateInput.trim().isEmpty()) {
-            System.out.println("Start Date cannot be empty.");
-            return;
-        }
-        LocalDate startDate;
-        try {
-            startDate = LocalDate.parse(startDateInput);
-        } catch (Exception e) {
-            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
-            return;
-        }
-
-        Station station = new Station(UUID.randomUUID(), startStation, endStation, startDate);
+        Station station = new Station(UUID.randomUUID(), name, location);
         stationService.addStation(station);
 
         System.out.println("Station added successfully!");
     }
 
     public void getStationById() {
-        System.out.println("\n--- Get Station by ID ---");
+        System.out.println("\n--- Get Station by ID ---\n");
         System.out.print("Enter Station ID: ");
         String idInput = scanner.nextLine();
         if (idInput.trim().isEmpty()) {
@@ -108,7 +93,7 @@ public class StationUi {
     }
 
     public void getAllStations() {
-        System.out.println("\n--- All Stations ---");
+        System.out.println("\n--- All Stations ---\n");
         List<Station> stations = stationService.getAllStations();
         if (stations.isEmpty()) {
             System.out.println("No stations found.");
@@ -118,7 +103,7 @@ public class StationUi {
     }
 
     public void updateStation() {
-        System.out.println("\n--- Update Station ---");
+        System.out.println("\n--- Update Station ---\n");
 
         System.out.print("Enter Station ID to update: ");
         String idInput = scanner.nextLine();
@@ -137,37 +122,22 @@ public class StationUi {
 
         Station station = stationService.getStationById(id);
         if (station != null) {
-            System.out.print("New Start Station: ");
-            String newStartStation = scanner.nextLine();
-            if (newStartStation.trim().isEmpty()) {
-                System.out.println("Start Station cannot be empty.");
+            System.out.print("New Station Name: ");
+            String newName = scanner.nextLine();
+            if (newName.trim().isEmpty()) {
+                System.out.println("Station Name cannot be empty.");
                 return;
             }
 
-            System.out.print("New End Station: ");
-            String newEndStation = scanner.nextLine();
-            if (newEndStation.trim().isEmpty()) {
-                System.out.println("End Station cannot be empty.");
+            System.out.print("New Station Location: ");
+            String newLocation = scanner.nextLine();
+            if (newLocation.trim().isEmpty()) {
+                System.out.println("Station Location cannot be empty.");
                 return;
             }
 
-            System.out.print("New Start Date (YYYY-MM-DD): ");
-            String newStartDateInput = scanner.nextLine();
-            if (newStartDateInput.trim().isEmpty()) {
-                System.out.println("Start Date cannot be empty.");
-                return;
-            }
-            LocalDate newStartDate;
-            try {
-                newStartDate = LocalDate.parse(newStartDateInput);
-            } catch (Exception e) {
-                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
-                return;
-            }
-
-            station.setStartStation(newStartStation);
-            station.setEndStation(newEndStation);
-            station.setStartDate(newStartDate);
+            station.setName(newName);
+            station.setLocation(newLocation);
 
             stationService.updateStation(station);
             System.out.println("Station updated successfully!");
@@ -177,7 +147,7 @@ public class StationUi {
     }
 
     public void deleteStation() {
-        System.out.println("\n--- Delete Station ---");
+        System.out.println("\n--- Delete Station ---\n");
         System.out.print("Enter Station ID to delete: ");
         String idInput = scanner.nextLine();
         if (idInput.trim().isEmpty()) {
