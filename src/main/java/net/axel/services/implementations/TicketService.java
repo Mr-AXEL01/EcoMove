@@ -2,13 +2,13 @@ package net.axel.services.implementations;
 
 import net.axel.models.dto.TicketDto;
 import net.axel.models.entities.Contract;
-import net.axel.models.entities.Station;
+import net.axel.models.entities.Journey;
 import net.axel.models.entities.Ticket;
 import net.axel.models.enums.ContractStatus;
 import net.axel.repositories.implementations.TicketRepository;
 import net.axel.repositories.interfaces.ITicketRipository;
 import net.axel.services.interfaces.IContractService;
-import net.axel.services.interfaces.IStationService;
+import net.axel.services.interfaces.IJourneyService;
 import net.axel.services.interfaces.ITicketService;
 
 import java.sql.SQLException;
@@ -19,24 +19,24 @@ public class TicketService implements ITicketService {
 
     private final ITicketRipository ticketRepository;
     private final IContractService contractService;
-    private final IStationService stationService;
+    private final IJourneyService journeyService;
 
-    public TicketService(TicketRepository ticketRepository ,ContractService contractService, StationService stationService) throws SQLException {
+    public TicketService(TicketRepository ticketRepository ,ContractService contractService, JourneyService journeyService) throws SQLException {
         this.ticketRepository = ticketRepository;
         this.contractService = contractService;
-        this.stationService = stationService;
+        this.journeyService = journeyService;
     }
 
     @Override
     public boolean addTicket(TicketDto dto) {
         final Contract contract = contractService.getContractById(dto.ContractId());
-        final Station station = stationService.getStationById(dto.StationId());
+        final Journey journey = journeyService.getJourneyById(dto.JourneyId());
         final double purchasePrice = dto.purchasePrice();
         final double resellPrice = dto.resellPrice();
         if(!checkContractStatus(contract) || checkPrices(purchasePrice, resellPrice)){
             return false;
         } else {
-            final Ticket ticket = new Ticket(UUID.randomUUID(), dto.transportType(), dto.purchasePrice(), dto.resellPrice(), dto.saleDate(), dto.ticketStatus(), contract, station);
+            final Ticket ticket = new Ticket(UUID.randomUUID(), dto.transportType(), dto.purchasePrice(), dto.resellPrice(), dto.saleDate(), dto.ticketStatus(), contract, journey);
             ticketRepository.addTicket(ticket);
             return true;
         }

@@ -13,7 +13,7 @@ public record TicketDto (
         Date saleDate,
         TicketStatus ticketStatus,
         UUID ContractId,
-        UUID StationId
+        UUID JourneyId
 ) {
 
 }

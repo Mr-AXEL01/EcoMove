@@ -168,17 +168,17 @@ public class TicketUi {
             return;
         }
 
-        System.out.print("Enter station ID: ");
-        String stationIdStr = scanner.nextLine();
-        if (stationIdStr.trim().isEmpty()) {
-            System.out.println("The station ID is empty.");
+        System.out.print("Enter journey ID: ");
+        String journeyIdStr = scanner.nextLine();
+        if (journeyIdStr.trim().isEmpty()) {
+            System.out.println("The journey ID is empty.");
             return;
         }
-        UUID stationId;
+        UUID journeyId;
         try {
-            stationId = UUID.fromString(stationIdStr);
+            journeyId = UUID.fromString(journeyIdStr);
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid station ID format.");
+            System.out.println("Invalid journey ID format.");
             return;
         }
 
@@ -189,7 +189,7 @@ public class TicketUi {
                 saleDate,
                 ticketStatus,
                 contractId,
-                stationId
+                journeyId
         );
 
         if (ticketService.addTicket(dto)) {
