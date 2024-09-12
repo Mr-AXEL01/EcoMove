@@ -70,7 +70,7 @@ public class PartnerRepository implements IPartnerRepository {
         }catch(SQLException e) {
             e.printStackTrace();
             System.err.println("Error find partner by ID:" + e.getMessage());
-            return new ArrayList<>();
+            return null;
         }
     }
 
