@@ -16,11 +16,50 @@ public class AdminMenu {
     private final Scanner scanner;
 
     public AdminMenu() throws SQLException {
-        this.partnerUi = new PartnerUi(new PartnerService(new PartnerRepository()));
+        this.partnerUi = new PartnerUi(
+                new PartnerService(
+                        new PartnerRepository()
+                )
+        );
+
         this.contractUi = new ContractUi();
-        this.promotionUi = new PromotionUi(new PromotionService(new PromotionRepository(), new ContractService(new ContractRepository(), new PartnerService(new PartnerRepository()))));
-        this.stationUi = new StationUi(new StationService(new StationRepository()));
-        this.ticketUi = new TicketUi(new TicketService(new TicketRepository(), new ContractService(new ContractRepository(), new PartnerService(new PartnerRepository())), new StationService(new StationRepository())), new PartnerService(new PartnerRepository()));
+
+        this.promotionUi = new PromotionUi(
+                new PromotionService(
+                        new PromotionRepository(),
+                        new ContractService(
+                                new ContractRepository(),
+                                new PartnerService(
+                                        new PartnerRepository()
+                                )
+                        )
+                )
+        );
+
+        this.stationUi = new StationUi(
+                new StationService(
+                        new StationRepository()
+                )
+        );
+
+        this.ticketUi = new TicketUi(
+                new TicketService(
+                        new TicketRepository(),
+                        new ContractService(
+                                new ContractRepository(),
+                                new PartnerService(
+                                        new PartnerRepository()
+                                )
+                        ),
+                        new JourneyService(
+                                new JourneyRepository()
+                        )
+                ),
+                new PartnerService(
+                        new PartnerRepository()
+                )
+        );
+
         this.scanner = new Scanner(System.in);
     }
 
