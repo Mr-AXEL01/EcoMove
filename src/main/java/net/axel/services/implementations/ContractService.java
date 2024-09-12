@@ -18,7 +18,7 @@ public class ContractService implements IContractService {
     private final IContractRepository contractRepository;
     private final IPartnerService partnerService;
 
-    public ContractService(ContractRepository contractRepository ,PartnerService partnerService) throws SQLException {
+    public ContractService(ContractRepository contractRepository ,PartnerService partnerService) {
         this.contractRepository = contractRepository;
         this.partnerService = partnerService;
     }
