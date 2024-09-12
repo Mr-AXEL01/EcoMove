@@ -1,6 +1,5 @@
 package net.axel.services.interfaces;
 
-import net.axel.models.dto.ClientDto;
 import net.axel.models.entities.Client;
 
 import java.util.List;
