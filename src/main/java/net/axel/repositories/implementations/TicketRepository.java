@@ -9,6 +9,7 @@ import net.axel.models.enums.TransportType;
 import net.axel.repositories.interfaces.ITicketRipository;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,17 +24,19 @@ public class TicketRepository implements ITicketRipository {
 
     @Override
     public void addTicket(Ticket ticket) {
-        String query = "INSERT INTO " + tableName + " (id, transport_type, purchase_price, resell_price, sale_date, ticket_status, contract_id, journey_id) " +
-                "VALUES(?, ?::TransportType, ?, ?, ?, ?::TicketStatus, ?, ?)";
+        String query = "INSERT INTO " + tableName + " (id, transport_type, purchase_price, resell_price, sale_date, departure_time, arrival_time, ticket_status, contract_id, journey_id) " +
+                "VALUES(?, ?::TransportType, ?, ?, ?, ?, ?, ?::TicketStatus, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)){
             stmt.setObject(1, ticket.getId());
             stmt.setString(2, ticket.getTransportType().name());
             stmt.setDouble(3, ticket.getPurchasePrice());
             stmt.setDouble(4, ticket.getResellPrice());
             stmt.setDate(5, new Date(ticket.getSaleDate().getTime()));
-            stmt.setString(6, ticket.getTicketStatus().name());
-            stmt.setObject(7, ticket.getContract().getId());
-            stmt.setObject(8, ticket.getJourney().getId());
+            stmt.setTimestamp(6, Timestamp.valueOf(ticket.getDepartureTime()));
+            stmt.setTimestamp(7, Timestamp.valueOf(ticket.getArrivalTime()));
+            stmt.setString(8, ticket.getTicketStatus().name());
+            stmt.setObject(9, ticket.getContract().getId());
+            stmt.setObject(10, ticket.getJourney().getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,8 +47,10 @@ public class TicketRepository implements ITicketRipository {
     @Override
     public List<Ticket> getAllTickets() {
         List<Ticket> tickets = new ArrayList<>();
-        String query = "SELECT t.*, s.*, c.*, p.* FROM " + tableName + " t " +
-                "JOIN stations s ON t.station_id = s.id" +
+        String query = "SELECT t.*, j.* ,start_s.*, end_s.* c.*, p.* FROM " + tableName + " t " +
+                "JOIN journeys j ON t.journey_id = j.id" +
+                "JOIN  stations start_s ON j.start_station = start_s.id" +
+                "JOIN  stations end_s ON j.end_station = end_s.id" +
                 "JOIN contracts c ON t.contract_id = c.id " +
                 "JOIN partners p ON c.partner_id = p.id";
         try (Statement stmt = connection.createStatement()) {
@@ -64,10 +69,12 @@ public class TicketRepository implements ITicketRipository {
     @Override
     public List<Ticket> getTicketsByPartner(UUID id) {
         List<Ticket> partnerTickets = new ArrayList<>();
-        String query = "SELECT t.*, s.*, c.*, p.* FROM " + tableName + " t " +
-                "JOIN stations s ON t.station_id = s.id" +
-                "JOIN contract c ON t.contract_id = c.id " +
-                "JOIN partner p ON c.partner_id = p.id WHERE p.id = ?";
+        String query = "SELECT t.*, j.* ,start_s.*, end_s.* c.*, p.* FROM " + tableName + " t " +
+                "JOIN journeys j ON t.journey_id = j.id" +
+                "JOIN  stations start_s ON j.start_station = start_s.id" +
+                "JOIN  stations end_s ON j.end_station = end_s.id" +
+                "JOIN contracts c ON t.contract_id = c.id " +
+                "JOIN partners p ON c.partner_id = p.id WHERE p.id= ? ";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setObject(1, id);
             ResultSet resultSet = stmt.executeQuery();
@@ -88,6 +95,8 @@ public class TicketRepository implements ITicketRipository {
         Double purchasePrice = resultSet.getDouble("purchase_price");
         Double resellPrice = resultSet.getDouble("resell_price");
         Date saleDate = resultSet.getDate("sale_date");
+        LocalDateTime departureTime = resultSet.getTimestamp("departure_time").toLocalDateTime();
+        LocalDateTime arrivalTime = resultSet.getTimestamp("arrival_time").toLocalDateTime();
         TicketStatus ticketStatus = TicketStatus.valueOf(resultSet.getString("ticket_status"));
 
         UUID contractId = UUID.fromString(resultSet.getString("contract_id"));
@@ -126,6 +135,6 @@ public class TicketRepository implements ITicketRipository {
 
         Contract contract = new Contract(contractId, startDate, endDate, specialTariff, conditionsAccord, renewable, contractStatus, partner);
 
-        return new Ticket(ticketId, transportType, purchasePrice, resellPrice, saleDate, ticketStatus, contract, journey);
+        return new Ticket(ticketId, transportType, purchasePrice, resellPrice, saleDate, departureTime, arrivalTime, ticketStatus, contract, journey);
     }
 }
