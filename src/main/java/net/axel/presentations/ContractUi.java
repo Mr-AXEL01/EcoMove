@@ -190,7 +190,8 @@ public class ContractUi {
                     contractStatus,
                     partnerId
             );
-            if(contractService.addContract(dto)) System.out.println("Contract added successfully!");
+            contractService.addContract(dto);
+            System.out.println("Contract added successfully!");
 
         } catch (ParseException e) {
             System.out.println("Error: Invalid date format. Please use 'yyyy-MM-dd'.");
