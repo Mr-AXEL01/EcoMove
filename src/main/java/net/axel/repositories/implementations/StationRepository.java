@@ -71,7 +71,7 @@ public class StationRepository implements IStationRepository {
         try(PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, station.getName());
             stmt.setString(2, station.getLocation());
-            stmt.setObject(4, station.getId());
+            stmt.setObject(3, station.getId());
             stmt.executeUpdate();
         } catch(SQLException e) {
             e.printStackTrace();

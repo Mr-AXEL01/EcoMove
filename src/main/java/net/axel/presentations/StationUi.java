@@ -98,7 +98,14 @@ public class StationUi {
         if (stations.isEmpty()) {
             System.out.println("No stations found.");
         } else {
-            stations.forEach(System.out::println);
+            System.out.println("***************************************");
+            for (Station station : stations) {
+                System.out.println("|----------------------------------------------------");
+                System.out.println("| ID       : " + station.getId());
+                System.out.println("| Name     : " + station.getName());
+                System.out.println("| Location : " + station.getLocation());
+                System.out.println("|----------------------------------------------------\n");
+            }
         }
     }
 
