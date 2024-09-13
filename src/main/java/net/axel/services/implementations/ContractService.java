@@ -8,7 +8,6 @@ import net.axel.repositories.interfaces.IContractRepository;
 import net.axel.services.interfaces.IContractService;
 import net.axel.services.interfaces.IPartnerService;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -24,16 +23,13 @@ public class ContractService implements IContractService {
     }
 
     @Override
-    public boolean addContract(ContractDto dto) {
+    public void addContract(ContractDto dto) {
         final Date StartDate = dto.startDate();
         final Date endDate = dto.endDate();
         if(checkDates(StartDate, endDate)) {
             final Partner partner = partnerService.getPartnerById(dto.partnerId());
             final Contract contract = new Contract(UUID.randomUUID(), dto.startDate(), dto.endDate(), dto.specialTariff(), dto.conditionAccord(), dto.renewable(), dto.status(), partner);
             contractRepository.addContract(contract);
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -62,10 +58,7 @@ public class ContractService implements IContractService {
     }
 
     private boolean checkDates(Date startDate, Date endDate) {
-        if (startDate.after(endDate)) {
-            System.out.println("Start date can't be after end date, try again with logic dates.");
-        }
-        return false;
+        return !startDate.after(endDate);
     }
 
 }
