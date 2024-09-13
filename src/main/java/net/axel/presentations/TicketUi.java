@@ -10,6 +10,9 @@ import net.axel.services.interfaces.ITicketService;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -19,11 +22,13 @@ public class TicketUi {
     private final ITicketService ticketService;
     private final IPartnerService partnerService;
     private final Scanner scanner;
+    private final DateTimeFormatter dateTimeFormatter;
 
     public TicketUi(ITicketService ticketService, IPartnerService partnerService) throws SQLException {
         this.ticketService = ticketService;
         this.partnerService = partnerService;
         this.scanner = new Scanner(System.in);
+        this.dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     }
 
     public void showMenu() {
@@ -144,6 +149,26 @@ public class TicketUi {
             return;
         }
 
+        System.out.print("Enter departure time (YYYY-MM-DD HH:MM): ");
+        String departureTimeStr = scanner.nextLine();
+        LocalDateTime departureTime;
+        try {
+            departureTime = LocalDateTime.parse(departureTimeStr, dateTimeFormatter);
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid departure time format. Please use YYYY-MM-DD HH:MM.");
+            return;
+        }
+
+        System.out.print("Enter arrival time (YYYY-MM-DD HH:MM): ");
+        String arrivalTimeStr = scanner.nextLine();
+        LocalDateTime arrivalTime;
+        try {
+            arrivalTime = LocalDateTime.parse(arrivalTimeStr, dateTimeFormatter);
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid arrival time format. Please use YYYY-MM-DD HH:MM.");
+            return;
+        }
+
         System.out.print("Enter ticket status (SOLD, PENDING, CANCELLED): ");
         String ticketStatusStr = scanner.nextLine();
         TicketStatus ticketStatus;
@@ -187,6 +212,8 @@ public class TicketUi {
                 purchasePrice,
                 resellPrice,
                 saleDate,
+                departureTime,
+                arrivalTime,
                 ticketStatus,
                 contractId,
                 journeyId
