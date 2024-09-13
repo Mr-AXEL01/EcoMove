@@ -47,10 +47,10 @@ public class TicketRepository implements ITicketRipository {
     @Override
     public List<Ticket> getAllTickets() {
         List<Ticket> tickets = new ArrayList<>();
-        String query = "SELECT t.*, j.* ,start_s.*, end_s.* c.*, p.* FROM " + tableName + " t " +
-                "JOIN journeys j ON t.journey_id = j.id" +
-                "JOIN  stations start_s ON j.start_station = start_s.id" +
-                "JOIN  stations end_s ON j.end_station = end_s.id" +
+        String query = "SELECT t.*, j.*, start_s.*, end_s.*, c.*, p.* FROM " + tableName + " t " +
+                "JOIN journeys j ON t.journey_id = j.id " +
+                "JOIN stations start_s ON j.start_station = start_s.id " +
+                "JOIN stations end_s ON j.end_station = end_s.id " +
                 "JOIN contracts c ON t.contract_id = c.id " +
                 "JOIN partners p ON c.partner_id = p.id";
         try (Statement stmt = connection.createStatement()) {
@@ -65,6 +65,7 @@ public class TicketRepository implements ITicketRipository {
             return null;
         }
     }
+
 
     @Override
     public List<Ticket> getTicketsByPartner(UUID id) {

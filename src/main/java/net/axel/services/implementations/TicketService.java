@@ -36,7 +36,7 @@ public class TicketService implements ITicketService {
         if(!checkContractStatus(contract) || checkPrices(purchasePrice, resellPrice)){
             return false;
         } else {
-            final Ticket ticket = new Ticket(UUID.randomUUID(), dto.transportType(), dto.purchasePrice(), dto.resellPrice(), dto.saleDate(), dto.ticketStatus(), contract, journey);
+            final Ticket ticket = new Ticket(UUID.randomUUID(), dto.transportType(), dto.purchasePrice(), dto.resellPrice(), dto.saleDate(), dto.departureTime(), dto.arrivalTime(), dto.ticketStatus(), contract, journey);
             ticketRepository.addTicket(ticket);
             return true;
         }
