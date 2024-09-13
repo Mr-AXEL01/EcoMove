@@ -60,12 +60,16 @@ CREATE TABLE IF NOT EXISTS Stations (
     location VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS journeys(
+CREATE TABLE IF NOT EXISTS Journeys (
     id UUID PRIMARY KEY,
-    start_station UUID,
-    end_station UUID,
-    FOREIGN KEY (start_station) REFERENCES stations(id),
-    FOREIGN KEY (end_station) REFERENCES stations(id)
+    start_station UUID NOT NULL ,
+    end_station UUID NOT NULL ,
+    FOREIGN KEY (start_station) REFERENCES Stations(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (end_station) REFERENCES Stations(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Tickets (
@@ -74,11 +78,17 @@ CREATE TABLE IF NOT EXISTS Tickets (
     purchase_price REAL NOT NULL,
     resell_price REAL NOT NULL,
     sale_date TIMESTAMP,
+    departure_time TIMESTAMP NOT NULL ,
+    arrival_time TIMESTAMP NOT NULL ,
     ticket_status TicketStatus NOT NULL,
-    contract_id UUID,
-    journey_id UUID,
-    FOREIGN KEY (contract_id) REFERENCES Contracts(id),
-    FOREIGN KEY (journey_id) REFERENCES journeys(id)
+    contract_id UUID NOT NULL,
+    journey_id UUID NOT NULL,
+    FOREIGN KEY (contract_id) REFERENCES Contracts(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (journey_id) REFERENCES Journeys(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Clients (
@@ -86,15 +96,28 @@ CREATE TABLE IF NOT EXISTS Clients (
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(255),
-
     PRIMARY KEY (email)
 );
 
 CREATE TABLE IF NOT EXISTS Bookings (
     id UUID PRIMARY KEY,
     booking_status BookingStatus NOT NULL,
-    client_email UUID,
+    client_email VARCHAR(255) NOT NULL,
     FOREIGN KEY (client_email) REFERENCES Clients(email)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS BookingTickets (
+    booking_id UUID NOT NULL,
+    ticket_id UUID NOT NULL,
+    PRIMARY KEY (booking_id, ticket_id),
+    FOREIGN KEY (booking_id) REFERENCES Bookings(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (ticket_id) REFERENCES Tickets(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Favorites (
@@ -103,6 +126,9 @@ CREATE TABLE IF NOT EXISTS Favorites (
     end_station VARCHAR(255) NOT NULL,
     departure_time TIMESTAMP NOT NULL,
     transport_type TransportType,
-    client_email UUID,
+    client_email VARCHAR(255) NOT NULL,
     FOREIGN KEY (client_email) REFERENCES Clients(email)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+
 );
