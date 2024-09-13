@@ -1,11 +1,16 @@
 package net.axel.presentations;
 
 import net.axel.models.entities.Client;
+import net.axel.models.entities.Ticket;
 import net.axel.services.interfaces.IClientService;
 import net.axel.services.interfaces.IFavoriteService;
 import net.axel.services.interfaces.IJourneyService;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class ClientMenu {
     private final IClientService clientService;
@@ -24,7 +29,7 @@ public class ClientMenu {
 
     public void displayMenu() {
         while (client != null) {
-            System.out.println("Hi, " + client.getFirstName() );
+            System.out.println("\nHi, " + client.getFirstName() );
             System.out.println("1. View Profile");
             System.out.println("2. My Favorite Searches");
             System.out.println("3. Search for Journeys");
@@ -48,7 +53,7 @@ public class ClientMenu {
                     System.out.println("Logging out...");
                     return;
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    System.out.println("Invalid choice. Please try again.\n");
             }
         }
     }
@@ -78,7 +83,7 @@ public class ClientMenu {
             case 3:
                 return;
             default:
-                System.out.println("Invalid choice. Please try again.");
+                System.out.println("Invalid choice. Please try again.\n");
         }
     }
 
@@ -95,7 +100,7 @@ public class ClientMenu {
         if (!phone.isEmpty()) client.setPhone(phone);
 
         clientService.updateClient(client);
-        System.out.println("Profile updated successfully.\n");
+        System.out.println("\nProfile updated successfully.\n");
     }
 
     private void deleteAccount() {
@@ -103,11 +108,10 @@ public class ClientMenu {
         String confirmation = scanner.nextLine();
         if ("yes".equalsIgnoreCase(confirmation)) {
             clientService.deleteClient(client.getMail());
-            System.out.println("Account deleted successfully. Logging out...");
-            client = null; // Clear the client object
-            return;
+            System.out.println("Account deleted successfully. Logging out...\n");
+            client = null;
         } else {
-            System.out.println("Account deletion cancelled.");
+            System.out.println("Account deletion cancelled.\n");
         }
     }
 
@@ -126,39 +130,40 @@ public class ClientMenu {
 //        }
     }
 
-    private void searchJourneys() {
-//        System.out.print("Enter start city: ");
-//        String startCity = scanner.nextLine();
-//        System.out.print("Enter end city: ");
-//        String endCity = scanner.nextLine();
-//        System.out.print("Enter departure time (yyyy-MM-dd HH:mm:ss): ");
-//        String departureTime = scanner.nextLine();
-//
-//        List<Journey> journeys = journeyService.searchJourneys(startCity, endCity, departureTime);
-//
-//        if (journeys.isEmpty()) {
-//            System.out.println("No journeys found.");
-//        } else {
-//            for (int i = 0; i < journeys.size(); i++) {
-//                Journey journey = journeys.get(i);
-//                System.out.println((i + 1) + ". Journey ID: " + journey.getId() +
-//                        ", Start Station: " + journey.getStartStation() +
-//                        ", End Station: " + journey.getEndStation() +
-//                        ", Departure Time: " + journey.getDepartureTime() +
-//                        ", Price: " + journey.getPrice());
-//            }
-//
-//            System.out.print("Enter the number of the journey to book: ");
-//            int choice = scanner.nextInt();
-//            scanner.nextLine();
-//
-//            if (choice > 0 && choice <= journeys.size()) {
-//                Journey selectedJourney = journeys.get(choice - 1);
-//                // Process the booking
-//                System.out.println("Journey booked successfully.");
-//            } else {
-//                System.out.println("Invalid choice.");
-//            }
-//        }
+
+
+    public void searchJourneys() {
+        System.out.print("Enter departure city: ");
+        String departureCity = scanner.nextLine();
+
+        System.out.print("Enter arrival city: ");
+        String arrivalCity = scanner.nextLine();
+
+        System.out.print("Enter departure date (yyyy-MM-dd): ");
+        String departureDateStr = scanner.nextLine();
+        LocalDate departureDate = LocalDate.parse(departureDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        UUID startStationId = journeyService.getStationIdByLocation(departureCity);
+        UUID endStationId = journeyService.getStationIdByLocation(arrivalCity);
+
+        if (startStationId != null && endStationId != null) {
+            List<Ticket> journey = journeyService.findShortestJourneyByDate(startStationId, endStationId, departureDate);
+
+            if (journey != null && !journey.isEmpty()) {
+                System.out.println("Journey found:");
+                for (Ticket ticket : journey) {
+                    System.out.println("Transport: " + ticket.getTransportType() +
+                            ", Departure: " + ticket.getDepartureTime() +
+                            ", Arrival: " + ticket.getArrivalTime() +
+                            ", Price: " + ticket.getPurchasePrice());
+                }
+            } else {
+                System.out.println("No journey found for the given cities and date.");
+            }
+        } else {
+            System.out.println("One or both cities are not found.");
+        }
     }
+
+
 }

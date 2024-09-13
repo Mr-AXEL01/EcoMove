@@ -13,6 +13,7 @@ public class AdminMenu {
     private final PromotionUi promotionUi;
     private final TicketUi ticketUi;
     private final StationUi stationUi;
+    private final JourneyUi jorneyUi;
     private final Scanner scanner;
 
     public AdminMenu() throws SQLException {
@@ -42,6 +43,19 @@ public class AdminMenu {
                 )
         );
 
+        this.jorneyUi = new JourneyUi(
+                new JourneyService(
+                        new JourneyRepository(
+                                new StationRepository()
+                        ),
+                        new TicketRepository(),
+                        new StationRepository()
+                ),
+                new StationService(
+                        new StationRepository()
+                )
+        );
+
         this.ticketUi = new TicketUi(
                 new TicketService(
                         new TicketRepository(),
@@ -52,7 +66,11 @@ public class AdminMenu {
                                 )
                         ),
                         new JourneyService(
-                                new JourneyRepository()
+                                new JourneyRepository(
+                                        new StationRepository()
+                                ),
+                                new TicketRepository(),
+                                new StationRepository()
                         )
                 ),
                 new PartnerService(
@@ -72,7 +90,8 @@ public class AdminMenu {
             System.out.println("3. Promotion Management");
             System.out.println("4. Ticket Management");
             System.out.println("5. Station Management");
-            System.out.println("6. Exit");
+            System.out.println("6. Journey Management");
+            System.out.println("7. Exit");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();
@@ -83,9 +102,10 @@ public class AdminMenu {
                 case 3 -> promotionUi.showMenu();
                 case 4 -> ticketUi.showMenu();
                 case 5 -> stationUi.showMenu();
-                case 6 -> System.out.println("Exiting the system...");
+                case 6 -> jorneyUi.showMenu();
+                case 7 -> System.out.println("Exiting the system...");
                 default -> System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 6);
+        } while (choice != 7);
     }
 }

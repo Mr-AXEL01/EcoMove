@@ -3,6 +3,8 @@ package net.axel.presentations;
 import net.axel.models.entities.Client;
 import net.axel.repositories.implementations.ClientRepository;
 import net.axel.repositories.implementations.JourneyRepository;
+import net.axel.repositories.implementations.StationRepository;
+import net.axel.repositories.implementations.TicketRepository;
 import net.axel.services.implementations.ClientService;
 import net.axel.services.implementations.FavoriteService;
 import net.axel.services.implementations.JourneyService;
@@ -20,9 +22,17 @@ public class UserMenu {
     private final IJourneyService journeyService;
 
     public UserMenu() throws SQLException {
-        this.clientService = new ClientService(new ClientRepository());
+        this.clientService = new ClientService(
+                new ClientRepository()
+        );
         this.favoriteService = new FavoriteService();
-        this.journeyService = new JourneyService(new JourneyRepository());
+        this.journeyService = new JourneyService(
+                new JourneyRepository(
+                        new StationRepository()
+                ),
+                new TicketRepository(),
+                new StationRepository()
+        );
         this.scanner = new Scanner(System.in);
     }
 
