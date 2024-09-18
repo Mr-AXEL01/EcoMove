@@ -39,7 +39,7 @@ public class JourneyRepository implements IJourneyRepository {
     @Override
     public Journey getJourneyById(UUID id) {
         final String query = "SELECT j.* , start_s.* , end_s.* FROM "+ tableName + " j " +
-                "JOIN stations start_s ON j.start_station = start_s.id" +
+                "JOIN stations start_s ON j.start_station = start_s.id " +
                 "JOIN stations end_s ON j.end_station = end_s.id WHERE j.id = ?";
         try(PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setObject(1, id);
