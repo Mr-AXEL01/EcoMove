@@ -1,6 +1,8 @@
 package net.axel;
 
-import net.axel.presentations.Menu;
+import net.axel.presentations.AdminMenu;
+import net.axel.presentations.MainMenu;
+import net.axel.presentations.UserMenu;
 
 import java.sql.SQLException;
 
@@ -31,8 +33,8 @@ public class Main {
 
 
         try {
-            Menu menu = new Menu();
-            menu.showMainMenu();
+            MainMenu menu = new MainMenu();
+            menu.displayMenu();
         } catch (SQLException e) {
             System.err.println("Error initializing the application: " + e.getMessage());
         }

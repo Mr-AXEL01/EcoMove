@@ -43,7 +43,7 @@ public class ContractRepository implements IContractRepository {
     @Override
     public Contract getContractById(UUID id) {
         String query = "SELECT c.*, p.* FROM " + tableName + " c " +
-                "JOIN partner p ON c.partner_id = p.id " +
+                "JOIN partners p ON c.partner_id = p.id " +
                 "WHERE c.id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setObject(1, id);
@@ -62,7 +62,7 @@ public class ContractRepository implements IContractRepository {
     @Override
     public List<Contract> getAllContracts() {
         List<Contract> contracts = new ArrayList<>();
-        String query = "SELECT c.* , p.* FROM " + tableName + " c JOIN partner p ON c.partner_id = p.id";
+        String query = "SELECT c.* , p.* FROM " + tableName + " c JOIN partners p ON c.partner_id = p.id";
         try(Statement stmt = connection.createStatement()) {
             ResultSet resultSet = stmt.executeQuery(query);
             while (resultSet.next()) {
