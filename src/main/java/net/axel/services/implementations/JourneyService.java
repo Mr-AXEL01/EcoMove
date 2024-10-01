@@ -94,7 +94,7 @@ public class JourneyService implements IJourneyService {
             UUID currentStationId = lastTicket.getJourney().getEndStation().getId();
 
             if (currentStationId.equals(endStationId)) {
-                return currentPath;  // Found the shortest path
+                return currentPath;
             }
 
             if (visitedStations.contains(currentStationId)) {
@@ -113,7 +113,7 @@ public class JourneyService implements IJourneyService {
             }
         }
 
-        return null;  // No path found
+        return null;
     }
 
     public UUID getStationIdByLocation(String cityName) {
@@ -125,7 +125,7 @@ public class JourneyService implements IJourneyService {
             }
         }
 
-        return null;  // Return null if no matching station is found
+        return null;
     }
 
 }
